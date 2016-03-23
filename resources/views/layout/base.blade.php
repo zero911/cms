@@ -18,14 +18,28 @@
 
     @section('header_css')@show
 
-    @section('header_style')@show
-
     @section('header_js')@show
 
+    @section('beforeStyle')
+    @show{{-- 在内联样式之前填充一些东西 --}}
+
+    @section('head_style')
+    @show{{-- head区域内联css样式表 --}}
+
+    @section('afterStyle')
+    @show{{-- 在内联样式之后填充一些东西 --}}
+
 </head>
-<body>
-@yield('container')
+<body @section('body_attr')class=""@show{{-- 追加类属性 --}}>
+
+@section('beforeBody')
+@show{{--在正文之后填充一些东西 --}}
+
+@section('body')
+@show{{-- 正文部分 --}}
+
+@section('afterBody')
+@show{{-- 在正文之后填充一些东西，比如统计代码之类的东东 --}}
+
 </body>
-{{--底部js--}}
-@section('end_js')@show
 </html>
