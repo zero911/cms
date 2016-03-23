@@ -11,6 +11,24 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+/*Route::get('/', function(){
+
+  return view('auth.login');
+});*/
+
+
+/*
+|--------------------------------------------------------------------------
+| 登录路由
+|--------------------------------------------------------------------------
+*/
+
+
+Route::group(['prefix' => 'auth'], function () {
+//
+    //AuthorityController
+    $sController = 'AuthorityController@';
+    Route::any('login', ['as' => 'login', 'uses' => $sController . 'login']);//登录
+    Route::get('logout', ['as' => 'logout', 'uses' => $sController . 'logout']);//登出
+    Route::any('forgot', ['as' => 'forgot', 'uses' => $sController . 'forgotPwd']);//忘记密码
 });

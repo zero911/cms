@@ -26,6 +26,9 @@ return [
             'scroll' => 'plugins/slimScroll/jquery.slimscroll.min.js',
             'respond' => 'lib/respond.js/1.4.2/respond.min.js',
             'html5shiv' => 'lib/html5shiv/3.7.2/html5shiv.js',
+            'my_js'=>'dist/js/yascmf.js',
+            'icheck'=>'plugins/iCheck/icheck.min.js',
+
         ],
     ],
 ];

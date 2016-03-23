@@ -30,7 +30,7 @@
     @show{{-- 在内联样式之后填充一些东西 --}}
 
 </head>
-<body @section('body_attr')class=""@show{{-- 追加类属性 --}}>
+<body @section('body_attr')class=""@show{{-- 给body追加类属性 --}}>
 
 @section('beforeBody')
 @show{{--在正文之后填充一些东西 --}}
@@ -39,7 +39,7 @@
 @show{{-- 正文部分 --}}
 
 @section('afterBody')
-@show{{-- 在正文之后填充一些东西，比如统计代码之类的东东 --}}
+@show{{-- 在正文之后填充一些东西，比如js --}}
 
 </body>
 </html>
