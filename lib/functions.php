@@ -73,3 +73,45 @@ function trimArray($arrayData){
     }
     return $result;
 }
+
+/**
+ * [翻译]
+ * @param string $key
+ * @param array $replace
+ * @param int $uc_type      1: 首字母大写； 2：全部单词首字母大写；3：先将slug格式转换为自然语言格式，再全部单词首字母大写
+ * @param string $locale    语言代码
+ * @return string
+ */
+function __($key, $replace = array(), $uc_type = 1,$locale = null) {
+//    $pre = 'transfer.';
+    !empty($replace) or $replace = [];
+    $aKeyParts = explode('.', $key);
+    if (count($aKeyParts) > 1){
+        list($sFile, $sKey) = $aKeyParts;
+    }
+    else{
+        $sFile = '_basic';
+        $sKey = $aKeyParts[0];
+        $key = $sFile . '.' . $sKey;
+    }
+    $key = strtolower($key);
+    $str = Lang::get($key, $replace, $locale);
+    $str != $key or $str = String::humenlize($sKey);
+    if ($uc_type > 0){
+        switch($uc_type){
+            case 1:
+                $str = ucfirst($str);
+                break;
+            case 2:
+                $str = ucwords($str);
+                break;
+            case 3:
+                $str = String::humenlize($str);
+                $str = ucwords($str);
+        }
+//        $function = $uc_type == 1 ? 'ucfirst' : 'ucwords';
+//        $str = $function($str);
+    }
+//    $str = Str::slug($str);
+    return $str;
+}
