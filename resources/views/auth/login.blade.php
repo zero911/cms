@@ -1,4 +1,4 @@
-@extends('layout._base')
+@extends('layout.base')
 
 @section('title') 登录 - Zero_CMS 后台系统 @stop
 
@@ -7,17 +7,34 @@
 @stop
 
 @section('header_css')
-    {!! style('bootstrap') !!}
-    {!! style('font-awesome') !!}
-    {!! style('ionicons') !!}
-    {!! style('cms') !!}
-    {!! style('_all-skins') !!}
-    {!! style('all') !!}
+    {{--    {!! style('bootstrap') !!}
+        {!! style('font-awesome') !!}
+        {!! style('ionicons') !!}
+        {!! style('cms') !!}
+        {!! style('_all-skins') !!}
+        {!! style('all') !!}--}}
+
+    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
+    <!-- Font Awesome Icons -->
+    <link href="{{ asset('lib/font-awesome/4.3.0/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
+    <!-- Ionicons -->
+    <link href="{{ asset('lib/ionicons/2.0.1/css/ionicons.min.css') }}" rel="stylesheet" type="text/css"/>
+    <!-- Theme style -->
+    <link href="{{ asset('dist/css/yascmf.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('dist/css/skins/_all-skins.min.css') }}" rel="stylesheet" type="text/css"/>
+    <!--
+    <link href="{{ asset('dist/css/skins/skin-black.min.css') }}" rel="stylesheet" type="text/css" />
+    -->
+    <link href="{{ asset('plugins/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css"/>
+
 @stop
 
 @section('header_js')
-{!! script('respond') !!}
-{!! script('html5shiv') !!}
+    {{--{!! script('respond') !!}
+    {!! script('html5shiv') !!}--}}
+
+    <script src="{{ asset('lib/html5shiv/3.7.2/html5shiv.js') }}"></script>
+    <script src="{{ asset('lib/respond.js/1.4.2/respond.min.js') }}"></script>
 @stop
 
 @section('body_attr') class="login-page"@stop
@@ -26,7 +43,7 @@
 
     <div class="login-box">
         <div class="login-logo">
-            <a href="#"><b>Zero</b>CMS</a>
+            <a href="#"><b>Zero |</b> CMS</a>
         </div><!-- /.login-logo -->
         <div class="login-box-body">
             <p class="login-box-msg">登录开始您的会话</p>
@@ -38,8 +55,8 @@
                 </div>
             @endif
 
-            <form method="post" action="{{ route('singin') }}" accept-charset="utf-8">
-                {{--<input name="_token" type="hidden" value="{{csrf_token()}}">--}}
+            <form method="post" accept-charset="utf-8">
+                <input name="_token" type="hidden" value="{{csrf_token()}}">
                 <div class="form-group has-feedback">
                     <input type="text" class="form-control" maxlength="20" name="username" placeholder="用户名"/>
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -74,12 +91,18 @@
 
         </div><!-- /.login-box-body -->
     </div><!-- /.login-box -->
-    @stop
+@stop
 
-    @section('afterBody')
-        {{script('jQuery')}}
-        {{script('bootstrap_js')}}
-        {{script('icheck')}}
+@section('afterBody')
+    {{--        {{script('jQuery')}}
+            {{script('bootstrap_js')}}
+            {{script('icheck')}}--}}
+
+    <script src="{{ asset('plugins/jQuery/jQuery-2.1.3.min.js') }}"></script>
+    <!-- Bootstrap 3.3.2 JS -->
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
+    <!-- iCheck -->
+    <script src="{{ asset('plugins/iCheck/icheck.min.js') }}" type="text/javascript"></script>
     <script>
         $(function () {
             $('input').iCheck({
@@ -89,4 +112,4 @@
             });
         });
     </script>
-    @stop
+@stop

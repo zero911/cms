@@ -24,6 +24,7 @@ function style($aliases, $attributes = array(), $interim = '')
     }
     $cssAliases = app('config')->get('extend.webAssets.cssAliases');
     $url        = isset($cssAliases[$aliases]) ? $cssAliases[$aliases] : $aliases;
+//    pr(app('html')->style($url,$attributes));exit;
     return app('html')->style($url, $attributes);
 }
 
@@ -59,4 +60,16 @@ function pr($val){
         print_r($val);
         echo $suffix;
     }
+}
+
+function trimArray($arrayData){
+    $result=[];
+    foreach($arrayData as $key => $data){
+        if(is_array($data)){
+            $result[$key]=trimArray($data);
+        }else{
+            $result[$key]=trim($data);
+        }
+    }
+    return $result;
 }
