@@ -13,6 +13,9 @@ class AdminBaseController extends Controller
 {
     protected $request;
     protected $resourceName='';
-//    protected
+    protected $customPath='';
+    protected $customViews=[];
+    protected $modelName='';
+
 
 }

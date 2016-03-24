@@ -6,7 +6,15 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*"
+        "laravel/framework": "5.1.*",
+        "intervention/image": "dev-master",
+        "laravelbook/ardent": "3.*",
+        "barryvdh/laravel-debugbar": "^2.0",
+        "pda/pheanstalk": "~3.0",
+        "laravelcollective/html": "~5.0",
+        "predis/predis": "^1.0",
+        "mews/captcha": "~2.0",
+        "ixudra/curl": "6.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -45,3 +45,18 @@ function script($aliases, $attributes = array(), $interim = '')
     $url       = isset($jsAliases[$aliases]) ? $jsAliases[$aliases] : $aliases;
     return app('html')->script($url, $attributes);
 }
+
+/**
+ * [格式话输出函数,用于调试]
+ * @param $val object/array/basic type
+ */
+function pr($val){
+    $bCli = php_sapi_name() == 'cli';
+    $prefix = $bCli ? "\n" : '<pre>';
+    $suffix = $bCli ? "\n" : '</pre>';
+    if (app('config')->get('app.debug')){
+        echo $prefix;
+        print_r($val);
+        echo $suffix;
+    }
+}

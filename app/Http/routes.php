@@ -2,33 +2,30 @@
 
 /*
 |--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
-
-/*Route::get('/', function(){
-
-  return view('auth.login');
-});*/
-
-
-/*
-|--------------------------------------------------------------------------
 | 登录路由
 |--------------------------------------------------------------------------
 */
 
+loadRoutes(Config::get('routes.nologon'));
 
-Route::group(['prefix' => 'auth'], function () {
-//
-    //AuthorityController
-    $sController = 'AuthorityController@';
-    Route::any('login', ['as' => 'login', 'uses' => $sController . 'login']);//登录
-    Route::get('logout', ['as' => 'logout', 'uses' => $sController . 'logout']);//登出
-    Route::any('forgot', ['as' => 'forgot', 'uses' => $sController . 'forgotPwd']);//忘记密码
+/*
+|--------------------------------------------------------------------------
+| 登录后的路由
+|--------------------------------------------------------------------------
+*/
+Route::group(['middleware'=>'auth'],function(){
+    #首页
+    Route::get('/',['as'=>'admin.home','uses'=>'HomeController@getHome']);
+    loadRoutes(Config::get('routes.logon'));
 });
+
+
+#定义加载路由的函数
+function loadRoutes($sPath){
+
+    $aRoutes=glob($sPath.'*.php');
+    foreach($aRoutes as $route){
+        include ($route);
+    }
+    unset($aRoutes);
+}
