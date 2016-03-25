@@ -24,7 +24,7 @@ class AuthorityController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'Logout']);
+        $this->middleware('guest', ['except' => 'logout']);
     }
 
     public function login(Request $request){
@@ -51,7 +51,7 @@ class AuthorityController extends Controller
     public function logout(){
         Auth::logout();
         Session::flush();
-        return redirect()->to('auth.login');
+        return redirect()->to('auth/login');
     }
 
     private function checkUser($aData){

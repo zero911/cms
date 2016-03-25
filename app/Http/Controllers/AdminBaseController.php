@@ -154,6 +154,14 @@ class AdminBaseController extends Controller
         return $this->render();
     }
 
+    /** [根据主键删除模型,支持单个,多个字符串或数组传入删除]
+     * @param $ids
+     * @return mixed
+     */
+    public function delete($ids){
+        $sModel=$this->model;
+        return $sModel::destroy($ids);
+    }
 
     /**页面搜索条件同一处理方法
      * @param $aData

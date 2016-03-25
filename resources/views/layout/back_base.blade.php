@@ -92,7 +92,7 @@
         <div class="content-wrapper">
             {{--右侧内容header--}}
             <section class="content-header">
-                @section('content-header')@show
+                @include('widgets.content-header')
             </section>
             {{--右侧内容主体--}}
             <section class="content">
