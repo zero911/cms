@@ -1,5 +1,5 @@
-@include('layout.back_base')
+@extends('layout.back_base')
 @section('content')
-    @include('dashboard')
-    @stop
+    @include('back.dashboard')
+    @parent
 @stop

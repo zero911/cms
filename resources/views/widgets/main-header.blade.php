@@ -3,9 +3,9 @@
     <!-- Logo -->
     <a href="/" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>C</b>MS</span>
+        <span class="logo-mini"><b>Zero |</b> CMS</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>C</b>MS</span>
+        <span class="logo-lg"><b>Zero |</b> CMS</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top" role="navigation">
@@ -246,7 +246,7 @@
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">退出</a>
+                                <a href="{{route('admin.logout')}}" class="btn btn-default btn-flat">退出</a>
                             </div>
                         </li>
                     </ul>

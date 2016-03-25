@@ -63,9 +63,4 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
-
-    public function login(Request $request){
-
-        dd(1);
-    }
 }

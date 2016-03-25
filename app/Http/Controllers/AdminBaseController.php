@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use Request;
+use Route;
 
 class AdminBaseController extends Controller
 {

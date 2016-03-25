@@ -15,8 +15,9 @@ loadRoutes(Config::get('routes.nologon'));
 */
 Route::group(['middleware'=>'auth'],function(){
     #首页
-    Route::get('/',['as'=>'admin.home','uses'=>'HomeController@getHome']);
-    loadRoutes(Config::get('routes.logon'));
+    $sController='HomeController@';
+    Route::get('/',['as'=>'admin.home','uses'=>$sController.'getHome']);
+//    loadRoutes(Config::get('routes.logon'));
 });
 
 
