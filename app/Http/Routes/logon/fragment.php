@@ -6,9 +6,9 @@
  * Time: 上午1:41
  */
 
-$sPrefix = 'article';
+$sPrefix = 'fragment';
 Route::group(['prefix' => $sPrefix], function () use ($sPrefix) {
-    $sController = 'ArticlesController@';
+    $sController = 'FragmentController@';
     Route::get('/', ['as' => $sPrefix . '.index', 'uses' => $sController . 'index']);
     Route::get('{id}/view', ['as' => $sPrefix . '.view', 'uses' => $sController . 'view']);
     Route::get('destroy/{id}', ['as' => $sPrefix . '.destroy', 'uses' => $sController . 'destroy']);

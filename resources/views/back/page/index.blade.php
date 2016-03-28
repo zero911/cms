@@ -1,15 +1,15 @@
 @extends('layout.back_base')
-@section('title') Zero|CMS - {{__('_basic.articles-index')}} @stop
+@section('title') Zero|CMS - {{__('_basic.page-index')}} @stop
 @section('content')
 
     {{--表单提交的提示语--}}
     @include('widgets.content-msgInfo')
     {{--撰写新文章button--}}
-    <a href="{{route('article.create')}}" class="btn btn-primary margin-bottom">撰写新文章</a>
+    <a href="{{route('article.create')}}" class="btn btn-primary margin-bottom">撰写</a>
 
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">{{__('_basic.articles')}}</h3>
+            <h3 class="box-title">{{__('_basic.page')}}</h3>
             <div class="box-tools">
                 <form action="http://g.yascmf.cn/admin/article" method="get">
                     <div class="input-group">
@@ -36,10 +36,8 @@
                 <tr>
                     <th>选择</th>
                     <th>操作</th>
-                    <th>推荐位</th>
                     <th>标题</th>
                     <th>Slug</th>
-                    <th>分类</th>
                     <th>最后修改时间</th>
                 </tr>
                 <!--tr-th end-->
@@ -54,13 +52,12 @@
                             </div>
                         </td>
                         <td>
-                            <a href="{{route('article.edit',$data->id)}}"><i class="fa fa-fw fa-pencil" title="修改"></i></a>
-                            <a href="{{route('article.view',$data->id)}}"><i class="fa fa-fw fa-link"
+                            <a href="{{route('page.edit',$data->id)}}"><i class="fa fa-fw fa-pencil" title="修改"></i></a>
+                            <a href="{{route('page.view',$data->id)}}"><i class="fa fa-fw fa-link"
                                                                              title="预览"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-minus-circle delete_item" title="删除"
-                                                             data-id="{{$data->id}}"></i></a>
+                                                             data-id="1"></i></a>
                         </td>
-                        <td class="text-green">{{$data->flag}}</td>
                         <td class="text-muted">{{$data->title}}</td>
                         <td class="text-green">
                             @if(empty($data->slug))
@@ -68,13 +65,6 @@
                             @else
                                 {{ $data->slug }}
                             @endif
-                        </td>
-                        <td class="text-red">
-                            @foreach($categories as $category)
-                                @if($category->id == $data->category_id)
-                                    {{$category->name}}
-                                @endif
-                            @endforeach
                         </td>
                         <td>{{$data->updated_at}}</td>
                     </tr>
@@ -85,20 +75,10 @@
         <div class="box-footer clearfix">
         </div>
         <!--隐藏型删除表单-->
-        <form method="get" accept-charset="utf-8" id="hidden-delete-form">
+        <form method="post" action="{{route('article.destroy')}}" accept-charset="utf-8" id="hidden-delete-form">
+            <input name="_method" type="hidden" value="delete">
             <input type="hidden" name="_token" value="{{csrf_token()}}">
         </form>
-    </div>
-@stop
 
-@section('filledScript')
-        <!--jQuery 提交表单，实现DELETE删除资源-->
-    //jQuery submit form
-    $('.delete_item').click(function(){
-    var action = '{{ route('article.index') }}';
-    var id = $(this).data('id');
-    var new_action = action + '/destroy/' + id;
-    $('#hidden-delete-form').attr('action', new_action);
-    $('#hidden-delete-form').submit();
-    });
+    </div>
 @stop

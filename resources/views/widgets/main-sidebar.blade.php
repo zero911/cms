@@ -54,10 +54,10 @@
                     <span class="label label-primary pull-right">4</span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li><a href="http://g.yascmf.cn/admin/article"><i class="fa fa-file-o"></i> 文章</a></li>
-                    <li><a href="http://g.yascmf.cn/admin/page"><i class="fa fa-file-o"></i> 单页</a></li>
+                    <li><a href="{{route('article.index')}}"><i class="fa fa-file-o"></i> 文章</a></li>
+                    <li><a href="{{route('page.index')}}"><i class="fa fa-file-o"></i> 单页</a></li>
                     <li><a href="http://g.yascmf.cn/admin/fragment"><i class="fa fa-file-o"></i> 碎片</a></li>
-                    <li><a href="http://g.yascmf.cn/admin/category"><i class="fa fa-file-o"></i> 分类</a></li>
+                    <li><a href="{{route('category.index')}}"><i class="fa fa-file-o"></i> 分类</a></li>
                 </ul>
             </li>
             <!--//内容管理 treeview-->

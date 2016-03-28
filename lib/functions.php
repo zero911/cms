@@ -7,11 +7,10 @@
  */
 
 
-
 /**
  * 样式别名加载（支持批量加载）
- * @param  string|array $aliases    配置文件中的别名
- * @param  array        $attributes 标签中需要加入的其它参数的数组
+ * @param  string|array $aliases 配置文件中的别名
+ * @param  array $attributes 标签中需要加入的其它参数的数组
  * @return string
  */
 function style($aliases, $attributes = array(), $interim = '')
@@ -23,15 +22,15 @@ function style($aliases, $attributes = array(), $interim = '')
         return $interim;
     }
     $cssAliases = app('config')->get('extend.webAssets.cssAliases');
-    $url        = isset($cssAliases[$aliases]) ? $cssAliases[$aliases] : $aliases;
+    $url = isset($cssAliases[$aliases]) ? $cssAliases[$aliases] : $aliases;
 //    pr(app('html')->style($url,$attributes));exit;
     return app('html')->style($url, $attributes);
 }
 
 /**
  * 脚本别名加载（支持批量加载）
- * @param  string|array $aliases    配置文件中的别名
- * @param  array        $attributes 标签中需要加入的其它参数的数组
+ * @param  string|array $aliases 配置文件中的别名
+ * @param  array $attributes 标签中需要加入的其它参数的数组
  * @return string
  */
 function script($aliases, $attributes = array(), $interim = '')
@@ -43,7 +42,7 @@ function script($aliases, $attributes = array(), $interim = '')
         return $interim;
     }
     $jsAliases = app('config')->get('extend.webAssets.jsAliases');
-    $url       = isset($jsAliases[$aliases]) ? $jsAliases[$aliases] : $aliases;
+    $url = isset($jsAliases[$aliases]) ? $jsAliases[$aliases] : $aliases;
     return app('html')->script($url, $attributes);
 }
 
@@ -51,24 +50,26 @@ function script($aliases, $attributes = array(), $interim = '')
  * [格式话输出函数,用于调试]
  * @param $val object/array/basic type
  */
-function pr($val){
+function pr($val)
+{
     $bCli = php_sapi_name() == 'cli';
     $prefix = $bCli ? "\n" : '<pre>';
     $suffix = $bCli ? "\n" : '</pre>';
-    if (app('config')->get('app.debug')){
+    if (app('config')->get('app.debug')) {
         echo $prefix;
         print_r($val);
         echo $suffix;
     }
 }
 
-function trimArray($arrayData){
-    $result=[];
-    foreach($arrayData as $key => $data){
-        if(is_array($data)){
-            $result[$key]=trimArray($data);
-        }else{
-            $result[$key]=trim($data);
+function trimArray($arrayData)
+{
+    $result = [];
+    foreach ($arrayData as $key => $data) {
+        if (is_array($data)) {
+            $result[$key] = trimArray($data);
+        } else {
+            $result[$key] = trim($data);
         }
     }
     return $result;
@@ -78,18 +79,18 @@ function trimArray($arrayData){
  * [翻译]
  * @param string $key
  * @param array $replace
- * @param int $uc_type      1: 首字母大写； 2：全部单词首字母大写；3：先将slug格式转换为自然语言格式，再全部单词首字母大写
- * @param string $locale    语言代码
+ * @param int $uc_type 1: 首字母大写； 2：全部单词首字母大写；3：先将slug格式转换为自然语言格式，再全部单词首字母大写
+ * @param string $locale 语言代码
  * @return string
  */
-function __($key, $replace = array(), $uc_type = 1,$locale = null) {
+function __($key, $replace = array(), $uc_type = 1, $locale = null)
+{
 //    $pre = 'transfer.';
     !empty($replace) or $replace = [];
     $aKeyParts = explode('.', $key);
-    if (count($aKeyParts) > 1){
+    if (count($aKeyParts) > 1) {
         list($sFile, $sKey) = $aKeyParts;
-    }
-    else{
+    } else {
         $sFile = '_basic';
         $sKey = $aKeyParts[0];
         $key = $sFile . '.' . $sKey;
@@ -97,8 +98,8 @@ function __($key, $replace = array(), $uc_type = 1,$locale = null) {
     $key = strtolower($key);
     $str = Lang::get($key, $replace, $locale);
     $str != $key or $str = String::humenlize($sKey);
-    if ($uc_type > 0){
-        switch($uc_type){
+    if ($uc_type > 0) {
+        switch ($uc_type) {
             case 1:
                 $str = ucfirst($str);
                 break;
@@ -115,3 +116,29 @@ function __($key, $replace = array(), $uc_type = 1,$locale = null) {
 //    $str = Str::slug($str);
     return $str;
 }
+
+/** [文章属性归属标记,两种情况:1,单个属性 2,多个属性则分拆]
+ * @param $flags string 文章的所有标记属性,可能多个可能一个(热门,滚动,其他)
+ * @param $flag string 当前的标记属性
+ * @return bool
+ */
+function check_string($flags, $flag)
+{
+    $bResult = false;
+    if (!strpos($flags, ',')) {
+        $bResult = $flags == $flag ? true : false;
+        return $bResult;
+    }
+
+    $aFlags = explode(',', $flags);
+    foreach ($aFlags as $value) {
+        if ($flag == $value) {
+            $bResult = true;
+            break;
+        } else {
+            continue;
+        }
+    }
+    return $bResult;
+}
+
