@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use Request;
+use Route;
 
 class AdminBaseController extends Controller
 {
@@ -22,11 +24,15 @@ class AdminBaseController extends Controller
     protected $viewVars = [];// 分配到页面的数据数组
     protected $controller;
     protected $resourceName = '';
-
+    protected $bCustomCondition = false;//页面前提条件是否开启
+    protected $aCustomConditionArray=[];//页面前提条件数组,支持多个条件组合
+    protected $routeName='';
     //自定义模板部分
     protected $customView = [];//被允许的模板数组
     protected $customPath = '';//模板文件路径
     protected $view = '';//最终整个模板的全路径  path.view
+
+    protected $bIsCached=false;
 
     /**
      * 构造器
@@ -91,7 +97,7 @@ class AdminBaseController extends Controller
     public function goBackToIndex($sMsgType, $sMessage)
     {
         //暂时写死index文件，后续需要改进
-        $sToUrl = route($this->customPath . '.' . 'index');
+        $sToUrl = route($this->routeName . '.' . 'index');
         return redirect()->to($sToUrl)->with($sMsgType, $sMessage);
     }
 
@@ -134,17 +140,20 @@ class AdminBaseController extends Controller
      */
     public function index()
     {
-        if (is_null($this->request) || is_null($this->request->input()) || count($this->request->input()) < 2) {
+        //is_null($this->request->input()) || count($this->request->input()) < 2
+        if (is_null($this->request) || !$this->bExtraSearch) {
 //            pr($this->model);exit;
             $oQuery = $this->model->where('id', '>', 0);
+            //若存在页面自定义条件检索则追加where
+            $oQuery=$this->bCustomCondition ? $this->model->doWhere($this->aCustomConditionArray): $oQuery;
         } else {
             $aData = trimArray($this->request->except('_token'));
 //            组装数组格式
             $aData = $this->makeSearchCondition($aData);
             $oQuery = $this->indexQuery($aData);
+            $pageSize = $this->request->input('pageSize');
         }
         //分页部分
-        $pageSize = $this->request->input('pageSize');
         $pageSize = isset($pageSize) && is_numeric($pageSize) ? $pageSize : static::$pageSize;
         $datas = $oQuery->paginate($pageSize);
         $this->setVars('datas', $datas);
@@ -152,6 +161,14 @@ class AdminBaseController extends Controller
         return $this->render();
     }
 
+    /** [根据主键删除模型,支持单个,多个字符串或数组传入删除]
+     * @param $ids
+     * @return mixed
+     */
+    public function delete($ids){
+        $sModel=$this->model;
+        return $sModel::destroy($ids);
+    }
 
     /**页面搜索条件同一处理方法
      * @param $aData

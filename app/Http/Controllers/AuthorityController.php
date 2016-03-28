@@ -15,6 +15,8 @@ use Input;
 use Config;
 use Lang;
 use Strting;
+use Auth;
+use Session;
 
 class AuthorityController extends Controller
 {
@@ -22,7 +24,7 @@ class AuthorityController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        $this->middleware('guest', ['except' => 'logout']);
     }
 
     public function login(Request $request){
@@ -33,42 +35,61 @@ class AuthorityController extends Controller
             $aData=trimArray(Input::all());
             //调用check
             $aResultData=$this->checkUser($aData);
+            if(!$aResultData[0]){
+                return redirect()->back()->withInput()->withErrors('error',$aResultData[1]);
+            }
+            //登陆成功
+            return route('admin.home');
         }
         return view('auth.login');
     }
 
+    /**
+     * [登出]
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function logout(){
+        Auth::logout();
+        Session::flush();
+        return redirect()->to('auth/login');
+    }
 
     private function checkUser($aData){
         //step1,表单验证
         //使用原生auth构建登录表单验证条件
         $rules=[
             'username'=>'required|alpha_num|between:3,10',
-            'password'=>'required|between:6,60'
+            'password'=>'required|between:5,60'
         ];
         $validate=Validator::make($aData,$rules);
-        if($validate->failed){
+        if($validate->failed()){
             return $this->validateFormat(false,__('_nologon.format-error'));
         }
-        //step2 检查改用是否存在
-        $oUser=User::getUserForName($aData['username']);
-        if(!is_object($oUser)){
-            return $this->validateFormat(false,__('_nologon.info-error'));
+        $aAttemptData=[
+            'username'=>$aData['username'],
+            'password'=>$aData['password'],
+            'user_type'=>'manager',//管理员用户登陆权限
+        ];
+        $bSucc=Auth::attempt($aAttemptData,false,true);
+        //step2 user检查失败
+        if(!$bSucc){
+            return $this->validateFormat($bSucc,__('_nologon.info-error'));
         }
-        //用户是否锁定
-        if($oUser->is_lock){
-            return $this->validateFormat(false,__)
+        //step3 用户是否锁定,暂时不处理显示出用户名错误.后期需优化
+        if(Auth::user()->is_locked){
+            return $this->validateFormat(false,__('_nologon.user-locked'));
         }
-
+        //登陆成功
+        return $this->validateFormat($bSucc,'');
     }
 
     /**[为登录校验定义统一的返回数组格式函数]
      * @param $bMsgType boolean
      * @param $sMsgInfo  string
-     * @param $oData  object
      * @return array
      */
-    private function validateFormat($bMsgType,$sMsgInfo,$oData=null){
+    private function validateFormat($bMsgType,$sMsgInfo=''){
 
-        return [$bMsgType,$sMsgInfo,$oData];
+        return [$bMsgType,$sMsgInfo];
     }
 }

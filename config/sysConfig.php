@@ -12,4 +12,5 @@
  */
 return [
     'captcha'=>false,//默认关闭验证码
+    'article-pic-path'=>'uploads/content/',//默认文章的图片保存位置
 ];

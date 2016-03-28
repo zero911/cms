@@ -54,7 +54,7 @@
                 </div>
                 <a href="#" class="small-box-footer">更多信息 <i class="fa fa-arrow-circle-right"></i></a>
             </div>
-        </div><!-- ./col -->
-    </div><!-- /.row -->
+        </div>
+    </div>
 
 </section>
