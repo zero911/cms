@@ -40,15 +40,15 @@
                         <td class="table-operation"><input type="checkbox" value="{{ $set->id }}" name="checkbox[]">
                         </td>
                         <td>
-                            <a href="{{ route('admin.setting.index') }}/{{ $set->id }}/edit"><i
+                            <a href="{{ route('setting.edit',$set->id) }}"><i
                                         class="fa fa-fw fa-pencil" title="修改"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-link" title="预览"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-minus-circle delete_item" title="删除"
                                                              data-id="{{ $set->id }}"></i></a>
                         </td>
                         <td>
-                            <a href="{{ route('admin.setting_type.index') }}/{{ $set->tid }}">{{ $set->tname }}
-                                /{{ $set->tvalue }}</a>
+                            <a href="{{ route('setting_type.index') }}">{{ $set->type['name'] }}
+                                /{{ $set->type['value'] }}</a>
                         </td>
                         <td class="text-red">{{ $set->name }}</td>
                         <td class="text-green">{{ $set->value }}</td>
@@ -63,7 +63,7 @@
         </div>
 
         <!--隐藏型删除表单-->
-        <form method="post" action="{{ route('admin.setting.index') }}" accept-charset="utf-8" id="hidden-delete-form">
+        <form method="post"  accept-charset="utf-8" id="hidden-delete-form">
             <input name="_method" type="hidden" value="delete">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
@@ -104,9 +104,9 @@
     <!--jQuery 提交表单，实现DELETE删除资源-->
     //jQuery submit form
     $('.delete_item').click(function(){
-    var action = '{{ route('admin.setting.index') }}';
+    var action = '{{ route('setting.index') }}';
     var id = $(this).data('id');
-    var new_action = action + '/' + id;
+    var new_action = action + '/destroy/' + id;
     $('#hidden-delete-form').attr('action', new_action);
     $('#hidden-delete-form').submit();
     });

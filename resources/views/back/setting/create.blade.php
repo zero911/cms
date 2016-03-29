@@ -43,6 +43,17 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label>状态
+                            <small class="text-red">*</small>
+                        </label>
+                        <div class="input-group">
+                            <input type="radio" name="status" value="1" checked>
+                            <label class="choice" for="radiogroup">启用</label>
+                            <input type="radio" name="status" value="0">
+                            <label class="choice" for="radiogroup">禁用</label>
+                        </div>
+                    </div>
                 </div><!-- /.tab-pane -->
 
                 <button type="submit" class="btn btn-primary">新增动态设置</button>

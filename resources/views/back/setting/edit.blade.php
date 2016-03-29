@@ -4,8 +4,7 @@
 @section('content')
     @include('widgets.content-msgInfo')
     <h2 class="page-header">{{__('_basic.setting-edit')}}</h2>
-    <form method="post" action="{{ route('admin.setting.update', $data->id) }}" accept-charset="utf-8">
-        <input name="_method" type="hidden" value="put">
+    <form method="post" action="{{ route('setting.edit', $data->id) }}" accept-charset="utf-8">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="nav-tabs-custom">
 

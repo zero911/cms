@@ -47,4 +47,6 @@ return [
     'setting-edit'=>'修改动态设置',
     'setting-create'=>'新增动态设置',
 
+    'manager'=>'管理员',
+
 ];

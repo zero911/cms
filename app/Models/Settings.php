@@ -11,9 +11,18 @@ namespace App\Models;
 
 class Settings extends BaseModel
 {
-    protected $table= 'yascmf_settings';
+    protected $table = 'yascmf_settings';
+    public $timestamps = false;
 
-    public function type(){
-        return $this->belongsTo('App\Models\SettingType','type_id');
+    public static $rules = [
+        'name' => 'required|alpha_dash|between:2,32',
+        'value' => 'required|min:5',
+        'type_id' => 'numeric',
+        'status' => 'boolean',
+    ];
+
+    public function type()
+    {
+        return $this->belongsTo('App\Models\SettingType', 'type_id');
     }
 }

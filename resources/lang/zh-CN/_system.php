@@ -16,4 +16,11 @@ return [
     'systemType-destroy-error' => '删除系统动态分组成功',
     'systemType-create-success' => '创建系统动态分组成功',
     'systemType-create-error' => '创建系统动态分组成功',
+
+    'setting-edit-success' => '更新动态设置成功',
+    'setting-edit-error' => '更新动态设置成功',
+    'setting-destroy-success' => '删除动态设置成功',
+    'setting-destroy-error' => '删除动态设置成功',
+    'setting-create-success' => '创建动态设置成功',
+    'setting-create-error' => '创建动态设置成功',
 ];
