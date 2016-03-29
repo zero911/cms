@@ -54,13 +54,22 @@
                 </tbody>
             </table>
         </div><!-- /.box-body -->
-        <div class="box-footer clearfix">
-            {!! $types->render() !!}
-        </div>
+{{--        <div class="box-footer clearfix">
+            --}}{{--{!! $settings->render() !!}--}}{{--
+            <div class="text-right">
+                <ul class="pagination pagination-sm">
+                    <li class=""><span>页{{$types->currentPage()}}, 单页记录{{$types->perPage()}}, 总计{{$types->total()}}
+                            <span></span></span>
+                    </li>
+                    <li>
+                        <a>{!! $types->render() !!}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>--}}
 
         <!--隐藏型删除表单-->
-        <form method="post" accept-charset="utf-8">
-            <input name="_method" type="hidden" value="delete">
+        <form method="get" accept-charset="utf-8">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
 

@@ -39,9 +39,9 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li class=""><a href="http://g.yascmf.cn/admin/console"><i class="fa fa-circle-o"></i> 概述</a></li>
-                    <li><a href="http://g.yascmf.cn/admin/me"><i class="fa fa-circle-o"></i> 个人资料</a></li>
-                    <li><a href="http://g.yascmf.cn/admin/cache"><i class="fa fa-circle-o"></i> 重建缓存</a></li>
+                    <li class=""><a href="/"><i class="fa fa-circle-o"></i> 概述</a></li>
+                    {{--<li><a href="http://g.yascmf.cn/admin/me"><i class="fa fa-circle-o"></i> 个人资料</a></li>--}}
+                    <li><a href="{{route('console.cache')}}"><i class="fa fa-circle-o"></i> 重建缓存</a></li>
                 </ul>
             </li>
             <!--//控制台 active treeview-->
@@ -90,7 +90,7 @@
                     <small class="label pull-right bg-red">5</small>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li><a href="http://g.yascmf.cn/admin/user"><i class="fa fa-circle-o"></i>管理员</a></li>
+                    <li><a href="{{route('manager.index')}}"><i class="fa fa-circle-o"></i>管理员</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i>注册用户</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i>付费客户</a></li>
                     <li><a href="http://g.yascmf.cn/admin/role"><i class="fa fa-circle-o"></i>角色</a></li>

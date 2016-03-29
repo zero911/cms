@@ -3,13 +3,13 @@
 @section('content')
 
     @include('widgets.content-msgInfo')
-    <a href="{{ route('admin.user.create') }}" class="btn btn-primary margin-bottom">新增管理员</a>
+    <a href="{{ route('manager.create') }}" class="btn btn-primary margin-bottom">新增管理员</a>
 
     <div class="box box-primary">
         <div class="box-header with-border">
             <h3 class="box-title">管理员列表</h3>
             <div class="box-tools">
-                <form action="{{ route('admin.user.index') }}" method="get">
+                <form action="{{ route('manager.index') }}" method="get">
                     <div class="input-group">
                         <input type="text" class="form-control input-sm pull-right" name="s_name"
                                value="{{ Input::get('s_name') }}" style="width: 150px;" placeholder="搜索用户登录名或昵称或真实姓名">
@@ -36,11 +36,11 @@
                     <th>最后一次登录时间</th>
                 </tr>
                 <!--tr-th end-->
-                @foreach ($users as $user)
+                @foreach ($datas as $user)
                     <tr>
                         <td>
-                            <a href="{{ route('admin.user.index') }}/{{ $user->id }}/edit"><i class="fa fa-fw fa-pencil"
-                                                                                              title="修改"></i></a>
+                            <a href="{{ route('manager.edit',$user->id) }}">
+                                <i class="fa fa-fw fa-pencil" title="修改"></i></a>
                         </td>
                         <td>{{ $user->id }}</td>
                         <td class="text-muted">{{ $user->username }} / {{ $user->nickname }}</td>
@@ -48,7 +48,7 @@
                             {{ $user->realname }}
                         </td>
                         <td class="text-red">
-                            @if(null !== $user->roles->first())  {{-- 某些错误情况下，会造成管理用户没有角色 --}}
+                            @if(null !== $user->roles())  {{-- 某些错误情况下，会造成管理用户没有角色 --}}
                             {{ $user->roles->first()->name }}
                             @else
                                 空(NULL)
@@ -68,12 +68,11 @@
             </table>
         </div><!-- /.box-body -->
         <div class="box-footer clearfix">
-            {!! $users->render() !!}
+            {{--{!! $users->render() !!}--}}
         </div>
 
         <!--隐藏型删除表单-->
-        <form method="post" action="{{ route('admin.user.index') }}" accept-charset="utf-8" id="hidden-delete-form">
-            <input name="_method" type="hidden" value="delete">
+        <form method="get"  accept-charset="utf-8" id="hidden-delete-form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
 
@@ -85,9 +84,9 @@
             <!--jQuery 提交表单，实现DELETE删除资源-->
     //jQuery submit form
     $('.delete_item').click(function(){
-    var action = '{{ route('admin.article.index') }}';
+    var action = '{{ route('manager.index') }}';
     var id = $(this).data('id');
-    var new_action = action + '/' + id;
+    var new_action = action + '/destroy/' + id;
     $('#hidden-delete-form').attr('action', new_action);
     $('#hidden-delete-form').submit();
     });

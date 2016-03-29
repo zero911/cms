@@ -70,7 +70,11 @@ class SettingController extends AdminBaseController
             if (!$validate->passes()) {
                 return $this->goBack('error', __('_basic.validate-error'));
             }
-            $bSucc = $sModel->save($aData);
+            $sModel->name = $aData['name'];
+            $sModel->value = $aData['value'];
+            $sModel->type_id = $aData['type_id'];
+            $sModel->status = $aData['status'];
+            $bSucc = $sModel->save();
             if ($bSucc) {
                 Cache::put('system', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
                 return $this->goBackToIndex('success', __('_system.setting-create-success'));
@@ -98,6 +102,11 @@ class SettingController extends AdminBaseController
             if (!$validate->passes()) {
                 return $this->goBack('error', __('_basic.validate-error'));
             }
+            $oSetting->name = $aData['name'];
+            $oSetting->value = $aData['value'];
+            $oSetting->type_id = $aData['type_id'];
+            $oSetting->status = $aData['status'];
+            $oSetting->sort = $aData['sort'];
             $bSucc = $sModel->save($aData);
             if ($bSucc) {
                 Cache::put('system', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);

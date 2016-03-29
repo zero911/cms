@@ -12,6 +12,7 @@ namespace App\Models;
 class SettingType extends BaseModel
 {
     protected $table = 'yascmf_setting_type';
+    public $timestamps = false;//取消自动更新时间
 
     public static $rules = [
         'name' => 'required|between:2,30',

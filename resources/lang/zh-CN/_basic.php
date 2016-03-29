@@ -49,4 +49,7 @@ return [
 
     'manager'=>'管理员',
 
+    'cache-reload'=>'重建缓存',
+    'cache-reload-success'=>'重建缓存成功！',
+
 ];

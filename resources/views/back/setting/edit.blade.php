@@ -48,9 +48,9 @@
                             <small class="text-red">*</small>
                         </label>
                         <div class="input-group">
-                            <input type="radio" name="status" value="0" {{ ($data->status === 0) ? 'checked' : '' }}>
+                            <input type="radio" name="status" value="0" {{ ($data->status == 0) ? 'checked' : '' }}>
                             <label class="choice" for="radiogroup">禁用</label>
-                            <input type="radio" name="status" value="1" {{ ($data->status === 1) ? 'checked' : '' }}>
+                            <input type="radio" name="status" value="1" {{ ($data->status == 1) ? 'checked' : '' }}>
                             <label class="choice" for="radiogroup">启用</label>
                         </div>
                     </div>

@@ -12,6 +12,7 @@ use Cache;
 use Illuminate\Support\Facades\Validator;
 use Request;
 use Auth;
+use Input;
 
 class SettingTypeController extends AdminBaseController
 {
@@ -70,7 +71,10 @@ class SettingTypeController extends AdminBaseController
             if (!$validate->passes()) {
                 return $this->goBack('error', __('_basic.validate-error'));
             }
-            $bSucc = $sModel->save($aData);
+            $sModel->name = $aData['name'];
+            $sModel->value = $aData['value'];
+            $sModel->sort = $aData['sort'];
+            $bSucc = $sModel->save();
             if ($bSucc) {
                 Cache::put('system_type', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
                 return $this->goBackToIndex('success', __('_system.systemType-create-success'));
@@ -98,7 +102,10 @@ class SettingTypeController extends AdminBaseController
             if (!$validate->passes()) {
                 return $this->goBack('error', __('_basic.validate-error'));
             }
-            $bSucc = $sModel->save($aData);
+            $oSystemType->name = $aData['name'];
+            $oSystemType->value = $aData['value'];
+            $oSystemType->sort = $aData['sort'];
+            $bSucc = $oSystemType->save();
             if ($bSucc) {
                 Cache::put('system_type', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
                 return $this->goBackToIndex('success', __('_system.systemType-edit-success'));

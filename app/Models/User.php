@@ -37,8 +37,12 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         'password'=>'required|confirmed|alpha_dash|between:6,16',
         'email'=>'required|email',
         'realname'=>'required|between:2,4',
-        'phone'=>'',
+        'phone'=>'numeric',
     ];
+
+    public function roles(){
+        return $this->belongsToMany('App\Models\Role','yascmf_role_user','user_id','role_id');
+    }
 
     public static function getUserForName($username){
         return static::where('username','=',$username)->first();
@@ -48,12 +52,19 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return static::where('user_type','=',$type)->where('is_lock','=',0)->get();
     }
 
+    /** [更新和创建用户组建函数,目前暂未对会员账户处理]
+     * @param $oModel  object
+     * @param $aInputs array
+     * @param string $user_type  string   类型分为manager|visitor|customer
+     * @return mixed object
+     */
     public function compileContent($oModel,$aInputs,$user_type='manager'){
         if($user_type==='manager'){
             $oModel->username=$aInputs['username'];
             $oModel->password=bcrypt($aInputs['password']);
             $oModel->email=$aInputs['email'];
             $oModel->realname=$aInputs['realname'];
+
         }elseif($user_type==='visitor'){
 
         }else{

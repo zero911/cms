@@ -30,9 +30,9 @@
                                placeholder="动态设置分组值">
                     </div>
                     <div class="form-group">
-                        <label>动态设置分组值 <span class="text-green small">数字</span></label>
-                        <input type="text" class="form-control" name="value"
-                               value="{{ Input::old('value', isset($data) ? $data->value : null) }}"
+                        <label>排序 <span class="text-green small">数字</span></label>
+                        <input type="text" class="form-control" name="sort"
+                               value="{{ Input::old('value', isset($data) ? $data->sort : null) }}"
                                placeholder="动态设置分组值">
                     </div>
                 </div><!-- /.tab-pane -->

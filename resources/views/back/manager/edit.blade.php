@@ -22,7 +22,7 @@
             </div>
         </div><!-- /.box-header -->
 
-        <form method="post" action="{{ route('admin.user.update', $user->id) }}" accept-charset="utf-8">
+        <form method="post" accept-charset="utf-8">
             <input name="_method" type="hidden" value="put">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="box-body">

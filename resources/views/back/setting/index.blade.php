@@ -47,8 +47,8 @@
                                                              data-id="{{ $set->id }}"></i></a>
                         </td>
                         <td>
-                            <a href="{{ route('setting_type.index') }}">{{ $set->type['name'] }}
-                                /{{ $set->type['value'] }}</a>
+                            <a href="{{ route('setting_type.index') }}">{{ $set->type->first()->name }}
+                                /{{ $set->type->first()->value }}</a>
                         </td>
                         <td class="text-red">{{ $set->name }}</td>
                         <td class="text-green">{{ $set->value }}</td>
@@ -59,7 +59,17 @@
             </table>
         </div><!-- /.box-body -->
         <div class="box-footer clearfix">
-            {!! $settings->render() !!}
+            {{--{!! $settings->render() !!}--}}
+            <div class="text-right">
+                <ul class="pagination pagination-sm">
+                    <li class=""><span>页{{$settings->currentPage()}}, 单页记录{{$settings->perPage()}}, 总计{{$settings->total()}}
+                            <span></span></span>
+                    </li>
+                    <li>
+                        <a>{!! $settings->render() !!}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!--隐藏型删除表单-->
