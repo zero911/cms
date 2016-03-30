@@ -15,6 +15,7 @@ use Auth;
 use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
+use App\Models\User;
 
 class ManagerController extends AdminBaseController
 {
@@ -126,7 +127,9 @@ class ManagerController extends AdminBaseController
             if(!$validate->passes()){
                 return $this->goBack('error',__('_basic.validate-error'));
             }
+            pr($aData);exit;
             $oManager=$sModel->compileContent(new User() ,$aData,$user_type='manager');
+            pr($oManager);exit;
             if($bSucc=$oManager->save()){
                 //管理员用户创建角色
                 $oManager->roles()->attach($aData['role']);

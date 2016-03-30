@@ -7,7 +7,7 @@
 
     <h2 class="page-header">新增管理员</h2>
     <form method="post" accept-charset="utf-8">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
         <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">

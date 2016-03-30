@@ -102,6 +102,6 @@ class AdminController extends AdminBaseController
             'success'=>'重建缓存成功!',
             'oUser'=>Auth::user(),
         ];
-        return view()->with($aData);
+        return view('back.console.cache')->with($aData);
     }
 }
