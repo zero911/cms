@@ -13,6 +13,7 @@ class RoleUser extends BaseModel
 {
 
     protected $table='yascmf_role_user';
+    public $timestamps=false;
 
     /**
      *  [得到角色id]

@@ -47,9 +47,9 @@
                         <small class="text-red">*</small>
                     </label>
                     <div class="input-group">
-                        <input type="radio" name="is_lock" value="0" {{ ($user->is_lock === 0) ? 'checked' : '' }}>
+                        <input type="radio" name="is_lock" value="0" {{ ($user->is_lock == 0) ? 'checked' : '' }}>
                         <label class="choice" for="radiogroup">否</label>
-                        <input type="radio" name="is_lock" value="1" {{ ($user->is_lock === 1) ? 'checked' : '' }}>
+                        <input type="radio" name="is_lock" value="1" {{ ($user->is_lock == 1) ? 'checked' : '' }}>
                         <label class="choice" for="radiogroup">是</label>
                     </div>
                 </div>
@@ -61,8 +61,8 @@
                         <select data-placeholder="选择角色（用户组）..." class="chosen-select" style="min-width:200px;"
                                 name="role">
                             @foreach ($roles as $role)
-                                <option value="{{ $role->id }}" {{ ($own_role->id === $role->id) ? 'selected':'' }}>{{ (Lang::has('roles.'.$role->name)) ? Lang::get('roles.'.$role->name) : ''}}
-                                    ({{ $role->name }})
+                                <option value="{{ $role->id }}" {{ ($user->roles->first()->id === $role->id) ? 'selected':'' }}>
+                                    {{ __('_user.'.$role->name) }} ({{ $role->name }})
                                 </option>
                             @endforeach
                         </select>

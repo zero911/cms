@@ -5,8 +5,8 @@
 
     @include('widgets.content-msgInfo')
 
-    <h2 class="page-header">新增角色</h2>
-    <form method="post" action="{{ route('admin.role.store') }}" accept-charset="utf-8">
+    <h2 class="page-header">{{__('_basic.role-create')}}</h2>
+    <form method="post" accept-charset="utf-8">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="nav-tabs-custom">
 

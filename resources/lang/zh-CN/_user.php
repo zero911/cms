@@ -21,4 +21,17 @@ return [
     'manager-destroy-error' => '删除管理员失败',
     'manager-create-success' => '创建管理员成功',
     'manager-create-error' => '创建管理员失败',
+
+    'role-edit-success' => '更新管理员成功',
+    'role-edit-error' => '更新管理员失败',
+    'role-destroy-success' => '删除管理员成功',
+    'role-destroy-error' => '删除管理员失败',
+    'role-create-success' => '创建管理员成功',
+    'role-create-error' => '创建管理员失败',
+
+    //角色对应
+    'demo'=>'演示',
+    'founder'=>'创始人',
+    'admin'=>'超级管理员',
+    'editor'=>'演示',
 ];

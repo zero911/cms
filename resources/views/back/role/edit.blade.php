@@ -4,8 +4,8 @@
 
     @include('widgets.content-msgInfo')
 
-    <h2 class="page-header">修改角色</h2>
-    <form method="post" action="{{ route('admin.role.update', $role->id) }}" accept-charset="utf-8">
+    <h2 class="page-header">{{__('_basic.role-edit')}}</h2>
+    <form method="post" action="{{ route('role.edit', $role->id) }}" accept-charset="utf-8">
         <input name="_method" type="hidden" value="put">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="nav-tabs-custom">
@@ -46,7 +46,7 @@
                         <div class="input-group">
                             @foreach($permissions as $per)
                                 <input type="checkbox" name="permissions[]"
-                                       value="{{ $per->id }}" {{ ( check_array($cans,'id', $per->id) === true) ? 'checked' : '' }}>
+                                       value="{{ $per->id }}" {{ ($role->permissions->first()->permission_id == $per->id) ? 'checked' : '' }}>
                                 <label class="choice" for="permissions[]">{{ $per->display_name }}</label>
                             @endforeach
                         </div>

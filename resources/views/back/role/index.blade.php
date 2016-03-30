@@ -2,11 +2,11 @@
 @section('title') Zero|CMS - {{__('_basic.role-index')}} @stop
 @section('content')
     @include('widgets.content-msgInfo')
-    <a href="{{ route('admin.role.create') }}" class="btn btn-primary margin-bottom">新增角色</a>
+    <a href="{{ route('role.create') }}" class="btn btn-primary margin-bottom">新增角色</a>
 
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">角色列表</h3>
+            <h3 class="box-title">{{__('_basic.role-index')}}</h3>
             <div class="box-tips clearfix">
                 <p class="text-red">
                     请在超级管理员协助下完成新增修改与删除角色（用户组）操作。
@@ -27,10 +27,10 @@
                 </tr>
                 <!--tr-th end-->
 
-                @foreach ($roles as $role)
+                @foreach ($datas as $role)
                     <tr>
                         <td>
-                            <a href="{{ route('admin.role.index') }}/{{ $role->id }}/edit"><i class="fa fa-fw fa-pencil"
+                            <a href="{{ route('role.edit',$role->id) }}"><i class="fa fa-fw fa-pencil"
                                                                                               title="修改"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-link" title="预览"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-minus-circle delete_item" title="删除"
@@ -49,8 +49,7 @@
         </div><!-- /.box-body -->
 
         <!--隐藏型删除表单-->
-        <form method="post" action="{{ route('admin.role.index') }}" accept-charset="utf-8" id="hidden-delete-form">
-            <input name="_method" type="hidden" value="delete">
+        <form method="get"  accept-charset="utf-8" id="hidden-delete-form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
 
@@ -62,9 +61,9 @@
             <!--jQuery 提交表单，实现DELETE删除资源-->
     //jQuery submit form
     $('.delete_item').click(function(){
-    var action = '{{ route('admin.role.index') }}';
+    var action = '{{ route('role.index') }}';
     var id = $(this).data('id');
-    var new_action = action + '/' + id;
+    var new_action = action + '/destroy/' + id;
     $('#hidden-delete-form').attr('action', new_action);
     $('#hidden-delete-form').submit();
     });
