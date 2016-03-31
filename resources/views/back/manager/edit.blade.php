@@ -61,7 +61,7 @@
                         <select data-placeholder="选择角色（用户组）..." class="chosen-select" style="min-width:200px;"
                                 name="role">
                             @foreach ($roles as $role)
-                                <option value="{{ $role->id }}" {{ ($user->roles->first()->id === $role->id) ? 'selected':'' }}>
+                                <option value="{{ $role->id }}" {{ in_array($role->id,$myRoles) ? 'selected':'' }}>
                                     {{ __('_user.'.$role->name) }} ({{ $role->name }})
                                 </option>
                             @endforeach

@@ -30,3 +30,6 @@ function loadRoutes($sPath){
     }
     unset($aRoutes);
 }
+
+
+#perimission http://www.cnblogs.com/yjf512/p/4516435.html

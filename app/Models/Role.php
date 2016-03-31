@@ -28,11 +28,25 @@ class Role extends BaseModel
     public function compileContent($oRole, $aInputs)
     {
 
-        $oRole->name = $aInputs['name'];
-        $oRole->display_name = $aInputs['display_name'];
-        if (array_key_exists('description', $aInputs['description'])) {
-            $oRole->description = $aInputs['description'];
+        $oRole->name = e($aInputs['name']);
+        $oRole->display_name = e($aInputs['display_name']);
+        if (array_key_exists('description', $aInputs)) {
+            $oRole->description = e($aInputs['description']);
         }
         return $oRole;
+    }
+
+    public static function getPermissions($id)
+    {
+        $aMyPers = [];
+        $aPermissions = static::find($id)->permissions->toArray();
+        foreach ($aPermissions as $per) {
+            foreach ($per as $key => $value) {
+                if ($key === 'pivot') {
+                    $aMyPers[] = $value['permission_id'];
+                }
+            }
+        }
+        return $aMyPers;
     }
 }

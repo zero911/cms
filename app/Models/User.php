@@ -36,6 +36,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         'address',
         'phone',
         'is_lock',
+        'user_type',
     ];
 
     public static $rules = [
@@ -49,6 +50,17 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function roles()
     {
         return $this->belongsToMany('App\Models\Role', 'yascmf_role_user', 'user_id', 'role_id');
+    }
+
+    public static function getRoles($id){
+        $aMyRoles=[];
+        $aRoles=static::find($id)->roles->toArray();
+        foreach($aRoles as $role){
+            if(is_array($role['pivot']) && $role['pivot']){
+                $aMyRoles[]=$role['pivot']['role_id'];
+            }
+        }
+        return $aMyRoles;
     }
 
     public static function getUserForName($username)
@@ -78,10 +90,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
         if ($user_type === 'manager') {
             $oModel->username = $aInputs['username'];
-            $oModel->password = bcrypt($aInputs['password']);
-            $oModel->email = $aInputs['email'];
             $oModel->realname = $aInputs['realname'];
-
         } elseif ($user_type === 'visitor') {
 
         } else {
@@ -93,8 +102,19 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         if (array_key_exists('address', $aInputs)) {
             $oModel->address = $aInputs['address'];
         }
-        /*        $oModel->created_at=Carbon::now()->toDateTimeString();
-                $oModel->updated_at=Carbon::now()->toDateTimeString();*/
+        if (array_key_exists('is_lock', $aInputs)) {
+            $oModel->is_lock = $aInputs['is_lock'];
+        }
+        if (array_key_exists('nickname', $aInputs)) {
+            $oModel->nickname = $aInputs['nickname'];
+        }
+        if (array_key_exists('password', $aInputs)) {
+            $oModel->password = bcrypt($aInputs['password']);
+        }
+        if (array_key_exists('email', $aInputs)) {
+            $oModel->email = $aInputs['email'];
+        }
+        $oModel->user_type=$user_type;
         return $oModel;
     }
 }
