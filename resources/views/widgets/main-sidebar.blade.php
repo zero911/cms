@@ -94,7 +94,8 @@
                     <li><a href="#"><i class="fa fa-circle-o"></i>注册用户</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i>付费客户</a></li>
                     <li><a href="{{route('role.index')}}"><i class="fa fa-circle-o"></i>角色</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i>权限</a></li>
+                    <li><a href="{{route('permission.index')}}"><i class="fa fa-circle-o"></i>权限</a></li>
+                    <li><a href="{{route('method.index')}}"><i class="fa fa-circle-o"></i>模块分配</a></li>
                 </ul>
             </li>
             <!--//用户管理 treeview-->

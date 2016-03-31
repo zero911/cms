@@ -1,15 +1,15 @@
 @extends('layout.back_base')
-@section('title') Zero|CMS - {{__('_user.permission-index')}} @stop
+@section('title') Zero|CMS - {{__('_basic.method-index')}} @stop
 @section('content')
 
     @include('widgets.content-msgInfo')
-    <a href="{{ route('permission.create') }}" class="btn btn-primary margin-bottom">{{__('_user.permission-create')}}</a>
+    <a href="{{ route('method.create') }}" class="btn btn-primary margin-bottom">{{__('_basic.method-create')}}</a>
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">{{__('_user.permission-index')}}</h3>
+            <h3 class="box-title">{{__('_basic.method-index')}}</h3>
             <div class="box-tips clearfix">
                 <p>
-                    <b>后台系统权限配置部分，谨慎操作</b>
+                    <b>后台系统暂支持所有模块，主要用于权限配置</b>
                 </p>
             </div>
             <div class="box-tools">
@@ -31,33 +31,53 @@
                 <tbody>
                 <!--tr-th start-->
                 <tr>
-                    {{--<th>选择</th>--}}
+                    <th>选择</th>
                     <th>操作</th>
-                    <th>编号</th>
-                    <th>权限标识串</th>
-                    <th>权限名称</th>
-                    <th>创建日期</th>
-                    <th>更新日期</th>
+                    <th>模块标识串</th>
+                    <th>名称</th>
+                    <th>URL地址</th>
+                    <th>状态</th>
+                    <th>父级模块名称</th>
+                    <th>更新时间</th>
                 </tr>
                 <!--tr-th end-->
 
-                @foreach ($datas as $permission)
+                @foreach ($datas as $method)
                     <tr>
-{{--                    <td class="table-operation"><input type="checkbox" value="{{ $permission->id }}" name="checkbox[]">
-                        </td>--}}
+
+                        <td class="table-operation"><input type="checkbox" value="{{ $method->id }}" name="checkbox[]">
+                        </td>
                         <td>
-                            <a href="{{ route('permission.edit',$permission->id) }}"><i
+                            <a href="{{ route('method.edit',$method->id) }}"><i
                                         class="fa fa-fw fa-pencil" title="修改"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-link" title="预览"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-minus-circle delete_item" title="删除"
-                                                             data-id="{{ $permission->id }}"></i></a>
+                                                             data-id="{{ $method->id }}"></i></a>
                         </td>
-                        <td>{{ $permission->id }}</td>
-                        <td class="text-red">{{ $permission->name }}</td>
-                        <td class="text-green">{{ $permission->display_name }}</td>
-                        <td class="text-green">{{ $permission->description }}</td>
-                        <td class="text-green">{{ $permission->created_at }}</td>
-                        <td class="text-green">{{ $permission->updated_at }}</td>
+                        <td>{{ $method->method_code }}</td>
+                        <td class="text-red">{{ $method->name }}</td>
+                        <td class="text-green">{{ $method->url }}</td>
+                        <td class="text-green">
+                            @if($method->is_actived)
+                                启用
+                                @else
+                                禁用
+                                @endif
+                        </td>
+                        <td class="text-green">
+
+                            @if($method->pid == 0)
+                                顶级模块
+                                @else
+                                @foreach($methods as $val)
+                                    @if($method->pid == $val->id)
+                                        {{$val->name}}
+                                        @endif
+                                    @endforeach
+                            @endif
+
+                        </td>
+                        <td class="text-green">{{ $method->updated_at }}</td>
                     </tr>
                 @endforeach
 
@@ -79,7 +99,8 @@
         </div>
 
         <!--隐藏型删除表单-->
-        <form method="get"  accept-charset="utf-8" id="hidden-delete-form">
+        <form method="post"  accept-charset="utf-8" id="hidden-delete-form">
+            <input name="_method" type="hidden" value="delete">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
 
@@ -119,7 +140,7 @@
     <!--jQuery 提交表单，实现DELETE删除资源-->
     //jQuery submit form
     $('.delete_item').click(function(){
-    var action = '{{ route('permission.index') }}';
+    var action = '{{ route('method.index') }}';
     var id = $(this).data('id');
     var new_action = action + '/destroy/' + id;
     $('#hidden-delete-form').attr('action', new_action);

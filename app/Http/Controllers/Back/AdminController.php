@@ -97,6 +97,7 @@ class AdminController extends AdminBaseController
 
         Cache::forget('syscfg');
         Cache::forget('setting');
+        Cache::forget('permission_method');
 
         $aData=[
             'success'=>'重建缓存成功!',

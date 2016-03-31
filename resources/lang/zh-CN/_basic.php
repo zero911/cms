@@ -49,6 +49,7 @@ return [
     'setting-create' => '新增动态设置',
 
     'manager' => '管理员',
+    'manager-exist'=>'该管理员名称已存在',
     'manager-index' => '动态设置列表',
     'manager-edit' => '修改动态设置',
     'manager-create' => '新增动态设置',
@@ -60,5 +61,14 @@ return [
 
     'cache-reload' => '重建缓存',
     'cache-reload-success' => '重建缓存成功！',
+
+    'method'=>'系统模块',
+    'method-exist'=>'该模块名已存在',
+    'method-index' => '系统模块列表',
+    'method-edit' => '修改系统模块',
+    'method-create' => '新增系统模块',
+
+    'user-exist'=>'该用户名已存在',
+
 
 ];

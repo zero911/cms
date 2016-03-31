@@ -32,9 +32,24 @@ return [
     'role-create-success' => '创建角色成功',
     'role-create-error' => '创建角色失败',
 
+    'permission'=>'权限',
+    'permission-exist'=>'该权限名已存在',
+    'permission-index' => '权限列表',
+    'permission-edit' => '修改权限',
+    'permission-create' => '新增权限',
+    'permission-edit-success' => '更新角色成功',
+    'permission-edit-error' => '更新角色失败',
+    'permission-destroy-success' => '删除角色成功',
+    'permission-destroy-error' => '删除角色失败',
+    'permission-create-success' => '创建角色成功',
+    'permission-create-error' => '创建角色失败',
+
     //角色对应
     'demo'=>'演示',
     'founder'=>'创始人',
     'admin'=>'超级管理员',
     'editor'=>'演示',
+
+
+
 ];

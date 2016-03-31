@@ -21,4 +21,8 @@ class Permission extends BaseModel
     public static function getPermissionByPermissionIds($sPermissionIds){
         return static::whereIn('id',$sPermissionIds)->get();
     }
+
+    public function methods(){
+        return static::belongsToMany('App\Models\Methods','yascmf_permission_method','permission_id','method_id');
+    }
 }
