@@ -32,6 +32,7 @@ class PermissionController extends AdminBaseController
         $sModel = $this->model;
         $this->setVars('oUser', Auth::user());
         $this->setVars('_title', __('_user.permission'));
+        pr(Methods::getTrees());exit;
     }
 
     /**[编辑]

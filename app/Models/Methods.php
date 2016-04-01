@@ -31,13 +31,30 @@ class Methods extends BaseModel
         return static::where('pid', '=', 0)->where('is_actived', '=', 1)->get();
     }
 
+    public static function getKids($pid)
+    {
+        $aKids = [];
+        $sId = '';
+        $oKids = static::where('pid', '=', $pid)->get(['id', 'name'])->toArray();
+        foreach ($oKids as $key => $kid) {
+            if ($key == count($oKids) - 1) {
+                $sId .= $kid['id'];
+            }else{
+                $sId .= $kid['id'] . ',';
+            }
+        }
+        $aKids[$pid]['id'] = $sId;
+        return $aKids;
+    }
+
     public static function getMethodByName($name)
     {
         return static::where('name', '=', $name)->first();
     }
 
-    public static function getMethods(){
-        return static::get(['id','name']);
+    public static function getMethods()
+    {
+        return static::get(['id', 'name']);
     }
 
     /** [保存和更新数据组建]
@@ -54,13 +71,28 @@ class Methods extends BaseModel
         $oModel->name = e($aInputs['name']);
         $oModel->pid = e($aInputs['pid']);
         $oModel->is_actived = e($aInputs['is_actived']);
-        if(array_key_exists('url', $aInputs)){
+        if (array_key_exists('url', $aInputs)) {
             $oModel->url = e($aInputs['url']);
         }
-        if(array_key_exists('method_code', $aInputs)) {
-            $oModel->method_code=$aInputs['method_code'];
+        if (array_key_exists('method_code', $aInputs)) {
+            $oModel->method_code = $aInputs['method_code'];
         }
-
         return $oModel;
+    }
+
+    public static function getTrees()
+    {
+        $tmp = [];
+        $aResult=[];
+        $oTops = static::getTopMethods();
+        foreach ($oTops as $top) {
+            $tmp[]=static::getKids($top['id']);
+        }
+        foreach($tmp as $key=>$val){
+            foreach($val as $k=>$item){
+                $aResult[$k]=$item;
+            }
+        }
+        return $aResult;
     }
 }
