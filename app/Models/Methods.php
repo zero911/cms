@@ -26,27 +26,28 @@ class Methods extends BaseModel
         'method_code' => 'alpha_dash',
     ];
 
+    /**[获取所有顶级模块]
+     * @return mixed
+     */
     public static function getTopMethods()
     {
         return static::where('pid', '=', 0)->where('is_actived', '=', 1)->get();
     }
 
-    public static function getKids($pid)
+    /** [获取指定顶级模块的子集模块对象]
+     * @param $pid
+     * @return mixed
+     */
+    public function getKids($pid)
     {
-        $aKids = [];
-        $sId = '';
-        $oKids = static::where('pid', '=', $pid)->get(['id', 'name'])->toArray();
-        foreach ($oKids as $key => $kid) {
-            if ($key == count($oKids) - 1) {
-                $sId .= $kid['id'];
-            }else{
-                $sId .= $kid['id'] . ',';
-            }
-        }
-        $aKids[$pid]['id'] = $sId;
-        return $aKids;
+        $oKids = static::where('pid', '=', $pid)->get(['id', 'name']);
+        return $oKids;
     }
 
+    /** [通过名字获取该模块对象]
+     * @param $name
+     * @return mixed
+     */
     public static function getMethodByName($name)
     {
         return static::where('name', '=', $name)->first();
@@ -71,28 +72,40 @@ class Methods extends BaseModel
         $oModel->name = e($aInputs['name']);
         $oModel->pid = e($aInputs['pid']);
         $oModel->is_actived = e($aInputs['is_actived']);
-        if (array_key_exists('url', $aInputs)) {
-            $oModel->url = e($aInputs['url']);
-        }
-        if (array_key_exists('method_code', $aInputs)) {
-            $oModel->method_code = $aInputs['method_code'];
-        }
+        !array_key_exists('url', $aInputs) or $oModel->url = e($aInputs['url']);
+        !array_key_exists('method_code', $aInputs) or $oModel->method_code = $aInputs['method_code'];
         return $oModel;
     }
 
-    public static function getTrees()
+    /** [按照分类得到所有id]
+     * @return string
+     */
+    private function getTrees()
     {
         $tmp = [];
-        $aResult=[];
+        $result = '';
         $oTops = static::getTopMethods();
         foreach ($oTops as $top) {
-            $tmp[]=static::getKids($top['id']);
+            $tmp[$top['id']] = $this->getKids($top['id'])->toArray();
         }
-        foreach($tmp as $key=>$val){
-            foreach($val as $k=>$item){
-                $aResult[$k]=$item;
+        //归类部分
+        foreach ($tmp as $key => $val) {
+            $str = $key . ',';
+            foreach ($val as $k => $item) {
+                $str .= $item['id'] . ',';
             }
+            $result .= $str;
         }
-        return $aResult;
+        return $result;
+    }
+
+    /**  [分类查询出所有模块对象]
+     * @return mixed
+     */
+    public function treeQuery()
+    {
+        $sTrees = $this->getTrees();
+        return static::whereIn('id', explode(',', $sTrees))->get();
     }
 }
+

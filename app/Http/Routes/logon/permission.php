@@ -16,4 +16,6 @@ Route::group(['prefix' => $sPrefix], function () use ($sPrefix) {
     Route::get('/', ['as' => $sPrefix . '.index', 'uses' => $sController . 'index']);
     Route::any('{id}/edit', ['as' => $sPrefix . '.edit', 'uses' => $sController . 'edit']);
     Route::any('create', ['as' => $sPrefix . '.create', 'uses' => $sController . 'create']);
+    Route::any('{id}/setPermission', ['as' => $sPrefix . '.setPermission', 'uses' => $sController . 'setAdminPermission']);
+    Route::get('{id}/viewPermission', ['as' => $sPrefix . '.viewPermission', 'uses' => $sController . 'viewAdminPermission']);
 });

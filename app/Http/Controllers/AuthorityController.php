@@ -27,16 +27,17 @@ class AuthorityController extends Controller
         $this->middleware('guest', ['except' => 'logout']);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
 
-        if($request->isMethod('POST')){
+        if ($request->isMethod('POST')) {
 //            pr(Input::all());exit;
-            $bCaptcha= Config::get('sysConfig.captcha');
-            $aData=trimArray(Input::all());
+            $bCaptcha = Config::get('sysConfig.captcha');
+            $aData = trimArray(Input::all());
             //调用check
-            $aResultData=$this->checkUser($aData);
-            if(!$aResultData[0]){
-                return redirect()->back()->withInput()->withErrors('error',$aResultData[1]);
+            $aResultData = $this->checkUser($aData);
+            if (!$aResultData[0]) {
+                return redirect()->back()->withInput()->withErrors('error', $aResultData[1]);
             }
             //登陆成功
             return route('admin.home');
@@ -48,39 +49,49 @@ class AuthorityController extends Controller
      * [登出]
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
         Session::flush();
         return redirect()->to('auth/login');
     }
 
-    private function checkUser($aData){
+    private function checkUser($aData)
+    {
         //step1,表单验证
         //使用原生auth构建登录表单验证条件
-        $rules=[
-            'username'=>'required|alpha_num|between:3,10',
-            'password'=>'required|between:5,60'
+        $rules = [
+            'username' => 'required|alpha_num|between:3,10',
+            'password' => 'required|between:5,60'
         ];
-        $validate=Validator::make($aData,$rules);
-        if($validate->failed()){
-            return $this->validateFormat(false,__('_nologon.format-error'));
+        $validate = Validator::make($aData, $rules);
+        if ($validate->failed()) {
+            return $this->validateFormat(false, __('_nologon.format-error'));
         }
-        $aAttemptData=[
-            'username'=>$aData['username'],
-            'password'=>$aData['password'],
-            'user_type'=>'manager',//管理员用户登陆权限
+        $aAttemptData = [
+            'username' => $aData['username'],
+            'password' => $aData['password'],
+            'user_type' => 'manager',//管理员用户登陆权限
         ];
-        $bSucc=Auth::attempt($aAttemptData,false,true);
+        $bSucc = Auth::attempt($aAttemptData, false, true);
         //step2 user检查失败
-        if(!$bSucc){
-            return $this->validateFormat($bSucc,__('_nologon.info-error'));
+        if (!$bSucc) {
+            return $this->validateFormat($bSucc, __('_nologon.info-error'));
         }
         //step3 用户是否锁定,暂时不处理显示出用户名错误.后期需优化
-        if(Auth::user()->is_locked){
-            return $this->validateFormat(false,__('_nologon.user-locked'));
+        if (Auth::user()->is_locked) {
+            return $this->validateFormat(false, __('_nologon.user-locked'));
         }
+
+        //写入session
+        Session::put('admin_user_id',Auth::user()->id);
+        Session::put('admin_username',Auth::user()->username);
+        Session::put('admin_realname',Auth::user()->realname);
+        Session::put('admin_user_type',Auth::user()->user_type);
+        Session::put('admin_nickname',Auth::user()->nickname);
+
         //登陆成功
-        return $this->validateFormat($bSucc,'');
+        return $this->validateFormat($bSucc, '');
     }
 
     /**[为登录校验定义统一的返回数组格式函数]
@@ -88,8 +99,9 @@ class AuthorityController extends Controller
      * @param $sMsgInfo  string
      * @return array
      */
-    private function validateFormat($bMsgType,$sMsgInfo=''){
+    private function validateFormat($bMsgType, $sMsgInfo = '')
+    {
 
-        return [$bMsgType,$sMsgInfo];
+        return [$bMsgType, $sMsgInfo];
     }
 }

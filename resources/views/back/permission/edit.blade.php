@@ -1,10 +1,10 @@
 @extends('layout.back_base')
 
-@section('title') Zero|CMS - {{__('_basic.method-edit')}} @stop
+@section('title') Zero|CMS - {{__('_user.permission-edit')}} @stop
 @section('content')
     @include('widgets.content-msgInfo')
-    <h2 class="page-header">{{__('_basic.method-edit')}}</h2>
-    <form method="post" action="{{ route('method.edit', $method->id) }}" accept-charset="utf-8">
+    <h2 class="page-header">{{__('_user.permission-edit')}}</h2>
+    <form method="post" action="{{ route('permission.edit', $permission->id) }}" accept-charset="utf-8">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="nav-tabs-custom">
 
@@ -16,36 +16,36 @@
 
                 <div class="tab-pane active" id="tab_1">
                     <div class="form-group">
-                        <label>模块编码
+                        <label>权限编码
                             {{--<small class="text-red">*</small>--}}
                             <span class="text-green small">只能数字、字母、下划线与横杠（0-9a-zA-Z_-）组合</span></label>
-                        <input type="text" class="form-control" name="method_code" autocomplete="off"
-                               value="{{ Input::old('method_code',isset($method) ? $method->method_code : null) }}" placeholder="模块编码">
+                        <input type="text" class="form-control" name="name" autocomplete="off"
+                               value="{{ Input::old('name',isset($permission) ? $permission->name : null) }}" placeholder="权限编码">
                     </div>
                     <div class="form-group">
-                        <label>模块名称
+                        <label>权限名称
                             <small class="text-red">*</small>
                             <span class="text-green small">只能全小写的英文字母与下划线（a-z_）组合</span></label>
-                        <input type="text" class="form-control" name="name" autocomplete="off"
-                               value="{{ Input::old('name', isset($method) ? $method->name : null) }}" placeholder="模块名称">
+                        <input type="text" class="form-control" name="display_name" autocomplete="off"
+                               value="{{ Input::old('display_name', isset($permission) ? $permission->display_name : null) }}" placeholder="权限名称">
                     </div>
                     <div class="form-group">
-                        <label>模块URL地址
+                        <label>权限描述
                             <small class="text-red">*</small>
                         </label>
-                        <input type="text" class="form-control" name="url"
-                               value="{{ Input::old('url', isset($method) ? $method->url : null) }}"
-                               placeholder="动态设置值">
+                        <input type="text" class="form-control" name="description"
+                               value="{{ Input::old('url', isset($permission) ? $permission->description : null) }}"
+                               placeholder="权限描述">
                     </div>
-                    <div class="form-group">
-                        <label>父级模块
+{{--                    <div class="form-group">
+                        <label>父级权限
                             <small class="text-red">*</small>
                         </label>
                         <div class="input-group">
-                            <select data-placeholder="父级模块" class="chosen-select" style="min-width:200px;" name="pid">
-                                <option value="0" >顶级模块</option>
+                            <select data-placeholder="父级权限" class="chosen-select" style="min-width:200px;" name="pid">
+                                <option value="0" >顶级权限</option>
                                 @foreach ($parents as $parent)
-                                    <option value="{{ $parent->id }}" {{ ($parent->id == $method->pid) ? 'selected':'' }}>{{ $parent->name }}</option>
+                                    <option value="{{ $parent->id }}" {{ ($parent->id == $permission->pid) ? 'selected':'' }}>{{ $parent->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -55,15 +55,15 @@
                             <small class="text-red">*</small>
                         </label>
                         <div class="input-group">
-                            <input type="radio" name="is_actived" value="0" {{ ($method->is_actived == 0) ? 'checked' : '' }}>
+                            <input type="radio" name="is_actived" value="0" {{ ($permission->is_actived == 0) ? 'checked' : '' }}>
                             <label class="choice" for="radiogroup">禁用</label>
-                            <input type="radio" name="is_actived" value="1" {{ ($method->is_actived == 1) ? 'checked' : '' }}>
+                            <input type="radio" name="is_actived" value="1" {{ ($permission->is_actived == 1) ? 'checked' : '' }}>
                             <label class="choice" for="radiogroup">启用</label>
                         </div>
                     </div>
-                </div><!-- /.tab-pane -->
+                </div><!-- /.tab-pane -->--}}
 
-                <button type="submit" class="btn btn-primary">{{__('_basic.method-edit')}}</button>
+                <button type="submit" class="btn btn-primary">{{__('_user.permission-edit')}}</button>
 
             </div><!-- /.tab-content -->
 

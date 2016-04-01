@@ -11,7 +11,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Auth;
 use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
@@ -34,7 +33,6 @@ class ManagerController extends AdminBaseController
         $sModel = $this->model;
         $oRole = Role::all();
         $this->setVars('roles', $oRole);
-        $this->setVars('oUser', Auth::user());
         $this->setVars('_title', __('_basic.manager'));
     }
 

@@ -9,7 +9,15 @@
                 <img src="http://g.yascmf.cn/dist/img/20150417113714.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p>{{$oUser->realname}}</p>
+                <p>
+                    @if(Session::get('realname') != '')
+                        {{Session::get('realname')}}
+                    @elseif(Session::get('nickname') != '')
+                        {{Session::get('nickname')}}
+                    @else
+                        {{Session::get('username')}}
+                    @endif
+                </p>
                 <!-- Status -->
                 <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
             </div>
@@ -95,7 +103,6 @@
                     <li><a href="#"><i class="fa fa-circle-o"></i>付费客户</a></li>
                     <li><a href="{{route('role.index')}}"><i class="fa fa-circle-o"></i>角色</a></li>
                     <li><a href="{{route('permission.index')}}"><i class="fa fa-circle-o"></i>权限</a></li>
-                    <li><a href="{{route('method.index')}}"><i class="fa fa-circle-o"></i>模块分配</a></li>
                 </ul>
             </li>
             <!--//用户管理 treeview-->
@@ -123,6 +130,7 @@
                 </a>
                 <ul class="treeview-menu" style="display: none;">
                     <li><a href="{{route('syscfg.index')}}"><i class="fa fa-square-o"></i>系统配置</a></li>
+                    <li><a href="{{route('method.index')}}"><i class="fa fa-circle-o"></i>系统模块</a></li>
                     <li><a href="{{route('setting_type.index')}}"><i class="fa fa-square-o"></i>动态设置分组</a></li>
                     <li><a href="{{route('setting.index')}}"><i class="fa fa-square-o"></i>动态设置</a></li>
                     <li><a href="http://g.yascmf.cn/admin/system_log"><i class="fa fa-square-o"></i>系统日志</a></li>

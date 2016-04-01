@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Validator;
 use Cache;
 use Request;
 use Input;
-use Auth;
 
 class SettingController extends AdminBaseController
 {
@@ -27,7 +26,6 @@ class SettingController extends AdminBaseController
     public function beforeRender()
     {
         parent::beforeRender();
-        $this->setVars('oUser', Auth::user());
         $this->setVars('_title', __('_basic.setting'));
         $types = SettingType::all();
         $this->setVars('types', $types);

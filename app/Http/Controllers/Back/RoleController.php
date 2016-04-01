@@ -11,7 +11,6 @@ namespace App\Http\Controllers;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
-use Auth;
 use Request;
 use Input;
 
@@ -28,7 +27,6 @@ class RoleController extends AdminBaseController
     public function beforeRender()
     {
         parent::beforeRender();
-        $this->setVars('oUser', Auth::user());
         $this->setVars('permissions', Permission::all());
     }
 

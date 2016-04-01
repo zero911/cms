@@ -37,12 +37,12 @@ return [
     'permission-index' => '权限列表',
     'permission-edit' => '修改权限',
     'permission-create' => '新增权限',
-    'permission-edit-success' => '更新角色成功',
-    'permission-edit-error' => '更新角色失败',
-    'permission-destroy-success' => '删除角色成功',
-    'permission-destroy-error' => '删除角色失败',
-    'permission-create-success' => '创建角色成功',
-    'permission-create-error' => '创建角色失败',
+    'permission-edit-success' => '更新权限成功',
+    'permission-edit-error' => '更新权限失败',
+    'permission-destroy-success' => '删除权限成功',
+    'permission-destroy-error' => '删除权限失败',
+    'permission-create-success' => '创建权限成功',
+    'permission-create-error' => '创建权限失败',
 
     //角色对应
     'demo'=>'演示',

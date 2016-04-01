@@ -233,9 +233,10 @@ CREATE TABLE `yascmf_permissions` (
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改更新时间',
+  `type` int(2) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `permissions_name_unique` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='权限信息表';
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='权限信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,6 +245,7 @@ CREATE TABLE `yascmf_permissions` (
 
 LOCK TABLES `yascmf_permissions` WRITE;
 /*!40000 ALTER TABLE `yascmf_permissions` DISABLE KEYS */;
+INSERT INTO `yascmf_permissions` VALUES (1,'permission_add','增加','','2016-04-01 20:47:00','2016-04-01 20:47:00',2),(2,'permission_delete','删除','','2016-04-01 20:47:47','2016-04-01 20:47:47',2),(3,'permission_edit','更新','','2016-04-01 20:48:18','2016-04-01 20:48:18',2),(4,'permission_view','查看详细','','2016-04-01 20:48:50','2016-04-01 20:55:33',2),(5,'permission_content_access','访问后台内容管理模块','','2016-04-01 20:59:24','2016-04-01 20:59:24',0),(6,'permission_user_access','访问后台用户管理模块','','2016-04-01 20:59:52','2016-04-01 20:59:52',0),(7,'permission_system_access','访问后台系统管理模块','','2016-04-01 21:00:18','2016-04-01 21:00:18',0),(8,'permission_content_article_access','访问后台文章管理模块','','2016-04-01 21:16:13','2016-04-01 21:16:13',1),(9,'permission_content_page_access','访问后台单页管理模块','','2016-04-01 21:17:21','2016-04-01 21:17:33',1),(10,'permission_content_category_access','访问后台分类管理模块','','2016-04-01 21:18:13','2016-04-01 21:18:13',1),(11,'permission_content_fragment_access','访问后台碎片管理模块','','2016-04-01 21:18:54','2016-04-01 21:18:54',1);
 /*!40000 ALTER TABLE `yascmf_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -496,4 +498,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-31 21:25:32
+-- Dump completed on 2016-04-01 21:41:17

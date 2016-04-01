@@ -18,29 +18,29 @@
                 <tbody>
                 <!--tr-th start-->
                 <tr>
-                    <th>操作</th>
                     <th>编号</th>
                     <th>角色（用户组）名</th>
                     <th>角色展示名</th>
                     <th>创建日期</th>
                     <th>更新日期</th>
+                    <th>操作</th>
                 </tr>
                 <!--tr-th end-->
 
                 @foreach ($datas as $role)
                     <tr>
-                        <td>
-                            <a href="{{ route('role.edit',$role->id) }}"><i class="fa fa-fw fa-pencil"
-                                                                                              title="修改"></i></a>
-                            <a href="javascript:void(0);"><i class="fa fa-fw fa-link" title="预览"></i></a>
-                            <a href="javascript:void(0);"><i class="fa fa-fw fa-minus-circle delete_item" title="删除"
-                                                             data-id="{{ $role->id }}"></i></a>
-                        </td>
                         <td class="text-muted">{{ $role->id }}</td>
                         <td class="text-green">{{ $role->name }}</td>
                         <td class="text-red">{{ $role->display_name }}</td>
                         <td>{{ $role->created_at }}</td>
                         <td>{{ $role->updated_at }}</td>
+                        <td>
+                            <a href="{{ route('role.edit',$role->id) }}"><i class="fa fa-fw fa-pencil"  title="修改"></i></a>
+                            <a href="javascript:void(0);"><i class="fa fa-fw fa-link" title="预览"></i></a>
+                            <a href="javascript:void(0);"><i class="fa fa-fw fa-minus-circle delete_item" title="删除" data-id="{{ $role->id }}"></i></a>
+                            <a href="{{route('permission.setPermission',$role->id)}}">设置权限</a>
+                            <a href="{{route('permission.viewPermission',$role->id)}}">查看权限</a>
+                        </td>
                     </tr>
                 @endforeach
 

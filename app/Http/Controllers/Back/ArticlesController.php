@@ -11,7 +11,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Articles;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Auth;
 use App\Models\Metas;
 use Illuminate\Support\Facades\Validator;
 use Request;
@@ -35,7 +34,6 @@ class ArticlesController extends AdminBaseController
         $sModel = $this->model;
         $oFlags = Flags::getFlags();
         $this->setVars('flags', $oFlags);
-        $this->setVars('oUser', Auth::user());
         $categories = Metas::getAllCategories();
         $this->setVars('categories', $categories);
         $this->setVars('_title', __('_basic.articles'));
