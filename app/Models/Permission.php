@@ -30,6 +30,12 @@ class Permission extends BaseModel
         'type' => 'required|numeric',
     ];
 
+    public function methods()
+    {
+        return static::belongsToMany('App\Models\Methods', 'yascmf_permission_method' ,
+            'method_id' , 'permission_id');
+    }
+
     /** [得到角色的所有权限]
      * @param $sPermissionIds string
      * @return object
@@ -58,8 +64,8 @@ class Permission extends BaseModel
     public static function getPermissionByType($type = self::PERMISSION_MENU_TYPE)
     {
         if (is_array($type)) {
-            return static::whereIn('type', $type)->get();
+            return static::whereIn('type', $type)->orderBy('type','asc')->get()->toArray();
         }
-        return static::where('type', '=', $type)->get();
+        return static::where('type', '=', $type)->orderBy('type','asc')->get()->toArray();
     }
 }

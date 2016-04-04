@@ -113,5 +113,65 @@ class Methods extends BaseModel
         $sTrees = $this->getTrees();
         return static::whereIn('id', explode(',', $sTrees))->get();
     }
+
+    /**
+     *  [得到所有的模块和对应的权限]
+     * @return array
+     */
+    public static function methodPermissions(){
+
+        $oMethods=static::where('is_actived','=',1)->get()->toArray();
+//        pr($oMethods);exit;
+        $aResult=[];
+        foreach($oMethods as $method){
+
+            if($method['pid']==0){
+                //一级菜单只拥有访问权限
+                $aResult[$method['id']]=$method;
+                $aResult[$method['id']]['permissions']=Permission::getPermissionByType();
+            }else{
+                if($method['id']==10){
+                    //角色拥有设置权限、crud、访问权限
+                    $aResult[$method['id']]=$method;
+                    $aResult[$method['id']]['permissions']=Permission::getPermissionByType(
+                        [Permission::PERMISSION_MENU_TYPE, Permission::PERMISSION_PAGE_TYPE,Permission::PERMISSION_PAGE_SET_TYPE]);
+                }else{
+                    //其他拥有crud和访问权限
+                    $aResult[$method['id']]=$method;
+                    $aResult[$method['id']]['permissions']=Permission::getPermissionByType([Permission::PERMISSION_MENU_TYPE, Permission::PERMISSION_PAGE_TYPE]);
+                }
+            }
+        }
+        return $aResult;
+    }
+
+    /** [得到当前角色的模块权限]
+     * @param $role_id
+     * @return array
+     */
+    public static function roleHasMethodPermissions($aIds){
+
+        $objs = PermissionMethod::whereIn('id', $aIds)->get();
+        $aResult = [];
+//        pr($obj);exit;
+        foreach ($objs as $key => $obj) {
+
+            if(isset($aResult[$obj->method_id])){
+                $aResult[$obj->method_id]['permissions'][$obj->permission_id] = [
+                    'id'=>$obj->permission_id,
+                    'display_name'=>$obj->permission_name,
+                    'has_permission'=>1,
+                ];
+            }else{
+                $aResult[$obj->method_id] = [
+                    'name' => $obj->method_name,
+                    'id' => $obj->method_id,
+                    'permissions'=>[],
+                ];
+            }
+
+        }
+        return $aResult;
+    }
 }
 

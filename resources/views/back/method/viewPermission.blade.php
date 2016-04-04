@@ -1,16 +1,9 @@
 @extends('layout.back_base')
 
-@section('title') Zero|CMS - {{__('_user.permission-set')}} @stop
+@section('title') Zero|CMS - {{__('_user.permission-view')}} @stop
 @section('content')
 
-    @if(Session::has('info'))
-        <div class="callout callout-info">
-            <h4><i class="icon fa fa-check"></i> 提示</h4>
-            <p>{{Session::get('info')}}</p>
-        </div>
-    @endif
-
-    <h2 class="page-header">{{__('_user.permission-set')}}</h2>
+    <h2 class="page-header">{{__('_user.permission-view')}}</h2>
     <form method="post" accept-charset="utf-8">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="nav-tabs-custom">
@@ -34,7 +27,7 @@
                             <td class="text-red">
                                 <div class="input-group">
                                     @foreach($methodPermission['permissions'] as $per)
-                                        <input type="checkbox" class="_per_checkbox" value="{{$per['id']}}"
+                                        <input type="checkbox" class="_per_checkbox" checked  value="{{$per['id']}}"
                                                name="per_id[][{{$methodPermission['id']}}]"/>
                                         <label class="choice"  for="permissions[]">{{ $per['display_name'] }}</label>
                                     @endforeach
@@ -46,9 +39,6 @@
                 </table>
             </div>
         </div>
-        <button type="button" id="_per_select_all" class="btn btn-info">全选</button>
-        <button type="button" id="_per_cancel_all" class="btn btn-info">取消</button>
-        <button type="submit" class="btn btn-primary">确认设置</button>
     </form>
 
     @stop
@@ -57,15 +47,7 @@
             <!--引入Chosen组件-->
     @include('scripts.endChosen')
 @stop
-@section('filledScript')
-    $('#_per_select_all').click(function(){
-    $('._per_checkbox').attr('checked',true);
-    });
 
-    $('#_per_cancel_all').click(function(){
-    $('._per_checkbox').attr('checked',false);
-    });
-@stop
 
 
 

@@ -9,9 +9,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Methods;
+use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\Role;
-use App\Models\Permission;
 use App\Models\PermissionMethod;
 use Illuminate\Support\Facades\Validator;
 use Request;
@@ -166,15 +166,18 @@ class MethodController extends AdminBaseController
         if (Request::isMethod('post')) {
             $aData = trimArray(Input::all());
             //调用设置模块权限函数
-            $this->setPermissions($aData,$role_id);
-            return $this->goBackToIndex('info',__('_system.method-permission-set'));
+            $this->setPermissions($aData, $role_id);
+            return $this->goBack('info', __('_system.method-permission-set'));
         }
         $oMethods = $this->model;
-        $this->setVars('datas', $oMethods->treeQuery());
-        $this->setVars('menuPermissions', Permission::getPermissionByType());
-        $this->setVars('permissions', Permission::getPermissionByType(
-            [Permission::PERMISSION_MENU_TYPE, Permission::PERMISSION_PAGE_TYPE]));
-        $this->setVars('allPermissions', Permission::all());
+        //所有模块的权限
+        $aAllMethodPermission = $oMethods::methodPermissions();
+        //得到当前角色拥有的权限
+        $aPermissionIds = PermissionRole::getPermissionIdByRoleId($role_id);
+        $aHasMethodPermission = $oMethods::roleHasMethodPermissions($aPermissionIds);
+        $methodPermissions=array_merge($aAllMethodPermission,$aHasMethodPermission);
+        pr($methodPermissions);exit;
+        $this->setVars('methodPermissions', $aAllMethodPermission);
         $this->view = 'back.method.setPermission';
         return $this->render();
     }
@@ -188,13 +191,18 @@ class MethodController extends AdminBaseController
         if (!is_object($oRole)) {
             return $this->goBack('error', __('_user.role-error'));
         }
-        $aPermissionIds=PermissionRole::getPermissionIdByRoleId($role_id);
-        $aMethodWithPermission=PermissionMethod::getPermissionMethodByIds($aPermissionIds);
-        pr($aMethodWithPermission);exit;
+        $aPermissionIds = PermissionRole::getPermissionIdByRoleId($role_id);
+        $aMethodWithPermission = Methods::roleHasMethodPermissions($aPermissionIds);
+        $this->setVars('methodPermissions', $aMethodWithPermission);
+        $this->view = 'back.method.viewPermission';
+        return $this->render();
     }
 
     private function setPermissions($aData, $role_id)
     {
+//        pr($aData);exit;
+        $oMethods=new Methods();
+        $oPermission=new Permission();
         $aPer_ids = $aData['per_id'];
         foreach ($aPer_ids as $val) {
             foreach ($val as $key => $item) {
@@ -202,7 +210,9 @@ class MethodController extends AdminBaseController
                 $oPermissionRole = new PermissionRole();
                 #保存到权限模块关联表数据
                 $oPermissionMethods->method_id = $key;
+                $oPermissionMethods->method_name = $oMethods->find($key)->name;
                 $oPermissionMethods->permission_id = $item;
+                $oPermissionMethods->permission_name = $oPermission->find($item)->display_name;
                 $oPermissionMethods->save();
                 #角色关联表保存数据
                 $oPermissionRole->role_id = $role_id;

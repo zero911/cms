@@ -24,4 +24,5 @@ class RoleUser extends BaseModel
         $oRoleUser=static::where('user_id','=',$iUserId)->first();
         return $oRoleUser->role_id;
     }
+
 }

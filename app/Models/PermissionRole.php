@@ -18,6 +18,7 @@ class PermissionRole extends BaseModel
      * @param $iRoleId
      * @return array
      */
+
     public static function getPermissionIdByRoleId($iRoleId){
         $aPermissionIds=[];
         $oPermissionIds=static::where('role_id','=',$iRoleId)->get(['permission_id']);
@@ -27,5 +28,4 @@ class PermissionRole extends BaseModel
         }
         return $aPermissionIds;
     }
-
 }
