@@ -27,7 +27,8 @@
                             <small class="text-red">*</small>
                             <span class="text-green small">建议中文</span>
                         </label>
-                        <input type="text" class="form-control" name="display_name" value="{{ Input::old('display_name') }}"
+                        <input type="text" class="form-control" name="display_name"
+                               value="{{ Input::old('display_name') }}"
                                placeholder="模块名称">
                     </div>
                     <div class="form-group">
@@ -35,41 +36,44 @@
                             <small class="text-red">*</small>
                             <span class="text-green small">建议中文</span>
                         </label>
-                        <input type="text" class="form-control" name="description" value="{{ Input::old('description') }}"
+                        <input type="text" class="form-control" name="description"
+                               value="{{ Input::old('description') }}"
                                placeholder="权限描述">
                     </div>
                     <div class="form-group">
                         <label>权限类型
                             <small class="text-red">*</small>
                         </label>
-                        <select data-placeholder="权限类型" class="chosen-select" style="min-width:200px;" name="pid">
-                            @foreach($types as $type)
-                                <option value="{{$type->id}}" >{{$type->name}}</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <select data-placeholder="权限类型" class="chosen-select" style="min-width:200px;" name="type">
+                                @foreach($types as $key => $type)
+                                    <option value="{{$key}}">{{__('_user.'.$type)}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-{{--                    <div class="form-group">
-                        <label>关联模块
-                            <small class="text-red">*</small>
-                        </label>
-                        <div class="input-group">
-                            @foreach($methods as $method)
-                                <input type="checkbox" name="permissions[]" value="{{ $method->id }}">
-                                <label class="choice" for="permissions[]">{{ $method->name }}</label>
-                            @endforeach
-                        </div>
-                    </div>--}}
-{{--                    <div class="form-group">
-                        <label>激活状态
-                            <small class="text-red">*</small>
-                        </label>
-                        <div class="input-group">
-                            <input type="radio" name="is_actived" value="1" checked>
-                            <label class="choice" for="radiogroup">启用</label>
-                            <input type="radio" name="is_actived" value="0">
-                            <label class="choice" for="radiogroup">禁用</label>
-                        </div>
-                    </div>--}}
+                    {{--                    <div class="form-group">
+                                            <label>关联模块
+                                                <small class="text-red">*</small>
+                                            </label>
+                                            <div class="input-group">
+                                                @foreach($methods as $method)
+                                                    <input type="checkbox" name="permissions[]" value="{{ $method->id }}">
+                                                    <label class="choice" for="permissions[]">{{ $method->name }}</label>
+                                                @endforeach
+                                            </div>
+                                        </div>--}}
+                    {{--                    <div class="form-group">
+                                            <label>激活状态
+                                                <small class="text-red">*</small>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="radio" name="is_actived" value="1" checked>
+                                                <label class="choice" for="radiogroup">启用</label>
+                                                <input type="radio" name="is_actived" value="0">
+                                                <label class="choice" for="radiogroup">禁用</label>
+                                            </div>
+                                        </div>--}}
                 </div><!-- /.tab-pane -->
 
                 <button type="submit" class="btn btn-primary">{{__('_user.permission-create')}}</button>

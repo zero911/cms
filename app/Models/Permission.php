@@ -14,9 +14,20 @@ class Permission extends BaseModel
 
     protected $table = 'yascmf_permissions';
 
+    const PERMISSION_MENU_TYPE = 1;//菜单权限
+    const PERMISSION_PAGE_TYPE = 2;//页面行级权限,比如页面crud
+    const PERMISSION_PAGE_SET_TYPE = 3;//页面行级设置权限,单独拿出
+
+    public static $permissionType = [
+        self::PERMISSION_MENU_TYPE => 'menu_permission',
+        self::PERMISSION_PAGE_TYPE => 'page_permission',
+        self::PERMISSION_PAGE_SET_TYPE => 'page_set_permission',
+    ];
+
     public static $rules = [
-        'name' => 'alpha_dash',
-        'display_name' => 'required|between:2,10',
+        'name' => 'alpha_dash|between:3,60',
+        'display_name' => 'required|between:2,20',
+        'type' => 'required|numeric',
     ];
 
     /** [得到角色的所有权限]
@@ -28,23 +39,27 @@ class Permission extends BaseModel
         return static::whereIn('id', $sPermissionIds)->get();
     }
 
-    public function methods()
+    public function saveContent($oModel, $aInputs, $is_create = true)
     {
-        return static::belongsToMany('App\Models\Methods', 'yascmf_permission_method', 'permission_id', 'method_id');
-    }
+        if ($is_create && static::where('name', '=', $aInputs['name'])->first()) return null;
 
-    public function saveContent($oModel, $aInputs,$is_create=true)
-    {
-        if($is_create && static::where('name','=',$aInputs['name'])->first()) return null;
-
-        $oModel->display_name=e($aInputs['display_name']);
-        !array_key_exists('name',$aInputs) or $oModel->name=e($aInputs['name']);
-        !array_key_exists('description',$aInputs) or $oModel->description=e($aInputs['description']);
+        $oModel->display_name = e($aInputs['display_name']);
+        $oModel->type = e($aInputs['type']);
+        !array_key_exists('name', $aInputs) or $oModel->name = e($aInputs['name']);
+        !array_key_exists('description', $aInputs) or $oModel->description = e($aInputs['description']);
 
         return $oModel;
     }
 
-    public static function getTypes(){
-        return static::get(['id','type']);
+    /** [按类别获取权限]
+     * @param int $type
+     * @return mixed
+     */
+    public static function getPermissionByType($type = self::PERMISSION_MENU_TYPE)
+    {
+        if (is_array($type)) {
+            return static::whereIn('type', $type)->get();
+        }
+        return static::where('type', '=', $type)->get();
     }
 }

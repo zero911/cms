@@ -38,8 +38,8 @@
                             <a href="{{ route('role.edit',$role->id) }}"><i class="fa fa-fw fa-pencil"  title="修改"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-link" title="预览"></i></a>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-minus-circle delete_item" title="删除" data-id="{{ $role->id }}"></i></a>
-                            <a href="{{route('permission.setPermission',$role->id)}}">设置权限</a>
-                            <a href="{{route('permission.viewPermission',$role->id)}}">查看权限</a>
+                            <a href="{{route('method.setPermission',$role->id)}}">设置权限</a>
+                            <a href="{{route('method.viewPermission',$role->id)}}">查看权限</a>
                         </td>
                     </tr>
                 @endforeach

@@ -58,6 +58,12 @@ class Methods extends BaseModel
         return static::get(['id', 'name']);
     }
 
+    public function permissions()
+    {
+        return static::belongsToMany('App\Models\Permission', 'yascmf_permission_method' ,
+            'method_id' , 'permission_id');
+    }
+
     /** [保存和更新数据组建]
      * @param $oModel object
      * @param $aInputs array
@@ -99,7 +105,7 @@ class Methods extends BaseModel
         return $result;
     }
 
-    /**  [分类查询出所有模块对象]
+    /**  [分类查询出所有模块]
      * @return mixed
      */
     public function treeQuery()

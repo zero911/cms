@@ -3,7 +3,8 @@
 @section('content')
 
     @include('widgets.content-msgInfo')
-    <a href="{{ route('permission.create') }}" class="btn btn-primary margin-bottom">{{__('_user.permission-create')}}</a>
+    <a href="{{ route('permission.create') }}"
+       class="btn btn-primary margin-bottom">{{__('_user.permission-create')}}</a>
     <div class="box box-primary">
         <div class="box-header with-border">
             <h3 class="box-title">{{__('_user.permission-index')}}</h3>
@@ -37,15 +38,15 @@
                     <th>权限标识串</th>
                     <th>权限名称</th>
                     <th>权限描述</th>
-                    <th>创建日期</th>
+                    <th>权限类型</th>
                     <th>更新日期</th>
                 </tr>
                 <!--tr-th end-->
 
                 @foreach ($datas as $permission)
                     <tr>
-{{--                    <td class="table-operation"><input type="checkbox" value="{{ $permission->id }}" name="checkbox[]">
-                        </td>--}}
+                        {{--                    <td class="table-operation"><input type="checkbox" value="{{ $permission->id }}" name="checkbox[]">
+                                                </td>--}}
                         <td>
                             <a href="{{ route('permission.edit',$permission->id) }}"><i
                                         class="fa fa-fw fa-pencil" title="修改"></i></a>
@@ -57,7 +58,13 @@
                         <td class="text-red">{{ $permission->name }}</td>
                         <td class="text-green">{{ $permission->display_name }}</td>
                         <td class="text-green">{{ $permission->description }}</td>
-                        <td class="text-green">{{ $permission->created_at }}</td>
+                        <td class="text-green">
+                            @foreach($types as $key => $type)
+                                @if($key == $permission->type)
+                                    {{__('_user.'.$type)}}
+                                @endif
+                            @endforeach
+                        </td>
                         <td class="text-green">{{ $permission->updated_at }}</td>
                     </tr>
                 @endforeach
@@ -80,7 +87,7 @@
         </div>
 
         <!--隐藏型删除表单-->
-        <form method="get"  accept-charset="utf-8" id="hidden-delete-form">
+        <form method="get" accept-charset="utf-8" id="hidden-delete-form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
 

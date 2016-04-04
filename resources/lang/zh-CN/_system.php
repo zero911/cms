@@ -7,8 +7,8 @@
  */
 
 return [
-    'system-option-edit-success'=>'更新系统配置成功',
-    'system-option-edit-error'=>'更新系统配置失败',
+    'system-option-edit-success' => '更新系统配置成功',
+    'system-option-edit-error' => '更新系统配置失败',
 
     'systemType-edit-success' => '更新系统动态分组成功',
     'systemType-edit-error' => '更新系统动态分组失败',
@@ -30,4 +30,5 @@ return [
     'method-destroy-error' => '删除系统模块失败',
     'method-create-success' => '创建系统模块成功',
     'method-create-error' => '创建系统模块失败',
+    'method-permission-set' => '已经设置模块权限,请查看权限设置',
 ];

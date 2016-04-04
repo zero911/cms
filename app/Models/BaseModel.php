@@ -56,7 +56,7 @@ class BaseModel extends Ardent {
                     $oQuery = is_null($condition[1]) ? static::whereNull($sColumn) : static::where($sColumn, '=', $condition[1]);
                     break;
                 case 'in':
-                    $aInData = is_array($condition[1]) ? $condition[1] : implode(',', $condition[1]);
+                    $aInData = is_array($condition[1]) ? $condition[1] : explode(',', $condition[1]);
                     $oQuery = static::whereIn($sColumn, $aInData);
                     break;
                 case '>':

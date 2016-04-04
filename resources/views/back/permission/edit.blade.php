@@ -30,6 +30,18 @@
                                value="{{ Input::old('display_name', isset($permission) ? $permission->display_name : null) }}" placeholder="权限名称">
                     </div>
                     <div class="form-group">
+                        <label>权限类型
+                            <small class="text-red">*</small>
+                        </label>
+                        <div class="input-group">
+                            <select data-placeholder="权限类型" class="chosen-select" style="min-width:200px;" name="type">
+                                @foreach($types as $key => $type)
+                                    <option value="{{$key}}" @if($key==$permission->type) selected @endif >{{__('_user.'.$type)}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label>权限描述
                             <small class="text-red">*</small>
                         </label>
