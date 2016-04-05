@@ -34,6 +34,7 @@ class MethodController extends AdminBaseController
         $this->setVars('_title', __('_basic.method'));
         $this->setVars('parents', $sModel::getTopMethods());
         $this->setVars('methods', $sModel::getMethods());
+        pr($sModel->getTrees());exit;
     }
 
     /**
@@ -173,10 +174,10 @@ class MethodController extends AdminBaseController
         //所有模块的权限
         $aAllMethodPermission = $oMethods::methodPermissions();
         //得到当前角色拥有的权限
-        $aPermissionIds = PermissionRole::getPermissionIdByRoleId($role_id);
+/*        $aPermissionIds = PermissionRole::getPermissionIdByRoleId($role_id);
         $aHasMethodPermission = $oMethods::roleHasMethodPermissions($aPermissionIds);
         $methodPermissions=array_merge($aAllMethodPermission,$aHasMethodPermission);
-        pr($methodPermissions);exit;
+        pr($methodPermissions);exit;*/
         $this->setVars('methodPermissions', $aAllMethodPermission);
         $this->view = 'back.method.setPermission';
         return $this->render();

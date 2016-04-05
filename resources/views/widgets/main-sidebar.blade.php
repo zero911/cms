@@ -28,7 +28,8 @@
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="搜索...">
               <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
               </span>
             </div>
         </form>
@@ -70,7 +71,7 @@
             </li>
             <!--//内容管理 treeview-->
 
-            <!--无子节点的一级导航节点-->
+{{--            <!--无子节点的一级导航节点-->
             <li><a href="#"><i class="fa fa-book"></i> <span>写作</span></a></li>
             <li><a href="http://g.yascmf.cn/admin/tag"><i class="fa fa-tags"></i> <span>标签</span></a></li>
 
@@ -106,7 +107,6 @@
                 </ul>
             </li>
             <!--//用户管理 treeview-->
-
             <!--业务管理 treeview-->
             <li class="treeview">
                 <a href="#"><i class="fa fa-coffee"></i>
@@ -115,9 +115,12 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="http://g.yascmf.cn/admin/flow"><i class="fa fa-sitemap"></i>业务流程</a></li>
-                    <li><a href="#"><i class="fa fa-envelope-o"></i>信息 <span class="label label-success pull-right">4</span></a></li>
-                    <li><a href="#"><i class="fa fa-bell-o"></i>通知 <span class="label label-warning pull-right">10</span></a></li>
-                    <li><a href="#"><i class="fa fa-flag-o"></i>任务 <span class="label label-danger pull-right">9</span></a></li>
+                    <li><a href="#"><i class="fa fa-envelope-o"></i>信息 <span
+                                    class="label label-success pull-right">4</span></a></li>
+                    <li><a href="#"><i class="fa fa-bell-o"></i>通知 <span
+                                    class="label label-warning pull-right">10</span></a></li>
+                    <li><a href="#"><i class="fa fa-flag-o"></i>任务 <span class="label label-danger pull-right">9</span></a>
+                    </li>
                 </ul>
             </li>
             <!--//业务管理 treeview-->
@@ -137,7 +140,7 @@
                     <li><a href="#"><i class="fa fa-square-o"></i>邮件日志</a></li>
                 </ul>
             </li>
-            <!--//系统管理 treeview-->
+            <!--//系统管理 treeview-->--}}
 
         </ul><!-- /.sidebar-menu -->
     </section>

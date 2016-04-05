@@ -179,8 +179,8 @@ CREATE TABLE `yascmf_permission_method` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `method_id` int(10) unsigned NOT NULL,
   `permission_id` int(10) unsigned NOT NULL,
-  `method_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `permission_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `method_name` varchar(50) NOT NULL DEFAULT '',
+  `permission_name` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=131 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='权限模块关联表';

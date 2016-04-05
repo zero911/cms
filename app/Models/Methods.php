@@ -60,8 +60,8 @@ class Methods extends BaseModel
 
     public function permissions()
     {
-        return static::belongsToMany('App\Models\Permission', 'yascmf_permission_method' ,
-            'method_id' , 'permission_id');
+        return static::belongsToMany('App\Models\Permission', 'yascmf_permission_method',
+            'method_id', 'permission_id');
     }
 
     /** [保存和更新数据组建]
@@ -86,59 +86,48 @@ class Methods extends BaseModel
     /** [按照分类得到所有id]
      * @return string
      */
-    private function getTrees()
+    public function getTrees()
     {
         $tmp = [];
-        $result = '';
-        $oTops = static::getTopMethods();
-        foreach ($oTops as $top) {
-            $tmp[$top['id']] = $this->getKids($top['id'])->toArray();
-        }
-        //归类部分
-        foreach ($tmp as $key => $val) {
-            $str = $key . ',';
-            foreach ($val as $k => $item) {
-                $str .= $item['id'] . ',';
+        $oTopMethods = $this->getTopMethods()->toArray();
+        $oMethods = static::where('is_actived', '=', 1)->get()->toArray();
+        foreach ($oTopMethods as $top) {
+            foreach ($oMethods as $method) {
+                if ($method['pid'] == $top['id']) {
+                    $top['kids'][] = $method;
+                }
             }
-            $result .= $str;
+            $tmp[] = $top;
         }
-        return $result;
-    }
-
-    /**  [分类查询出所有模块]
-     * @return mixed
-     */
-    public function treeQuery()
-    {
-        $sTrees = $this->getTrees();
-        return static::whereIn('id', explode(',', $sTrees))->get();
+        return $tmp;
     }
 
     /**
      *  [得到所有的模块和对应的权限]
      * @return array
      */
-    public static function methodPermissions(){
+    public static function methodPermissions()
+    {
 
-        $oMethods=static::where('is_actived','=',1)->get()->toArray();
+        $oMethods = static::where('is_actived', '=', 1)->get()->toArray();
 //        pr($oMethods);exit;
-        $aResult=[];
-        foreach($oMethods as $method){
+        $aResult = [];
+        foreach ($oMethods as $method) {
 
-            if($method['pid']==0){
+            if ($method['pid'] == 0) {
                 //一级菜单只拥有访问权限
-                $aResult[$method['id']]=$method;
-                $aResult[$method['id']]['permissions']=Permission::getPermissionByType();
-            }else{
-                if($method['id']==10){
+                $aResult[$method['id']] = $method;
+                $aResult[$method['id']]['permissions'] = Permission::getPermissionByType();
+            } else {
+                if ($method['id'] == 10) {
                     //角色拥有设置权限、crud、访问权限
-                    $aResult[$method['id']]=$method;
-                    $aResult[$method['id']]['permissions']=Permission::getPermissionByType(
-                        [Permission::PERMISSION_MENU_TYPE, Permission::PERMISSION_PAGE_TYPE,Permission::PERMISSION_PAGE_SET_TYPE]);
-                }else{
+                    $aResult[$method['id']] = $method;
+                    $aResult[$method['id']]['permissions'] = Permission::getPermissionByType(
+                        [Permission::PERMISSION_MENU_TYPE, Permission::PERMISSION_PAGE_TYPE, Permission::PERMISSION_PAGE_SET_TYPE]);
+                } else {
                     //其他拥有crud和访问权限
-                    $aResult[$method['id']]=$method;
-                    $aResult[$method['id']]['permissions']=Permission::getPermissionByType([Permission::PERMISSION_MENU_TYPE, Permission::PERMISSION_PAGE_TYPE]);
+                    $aResult[$method['id']] = $method;
+                    $aResult[$method['id']]['permissions'] = Permission::getPermissionByType([Permission::PERMISSION_MENU_TYPE, Permission::PERMISSION_PAGE_TYPE]);
                 }
             }
         }
@@ -149,24 +138,25 @@ class Methods extends BaseModel
      * @param $role_id
      * @return array
      */
-    public static function roleHasMethodPermissions($aIds){
+    public static function roleHasMethodPermissions($aIds)
+    {
 
         $objs = PermissionMethod::whereIn('id', $aIds)->get();
         $aResult = [];
 //        pr($obj);exit;
         foreach ($objs as $key => $obj) {
 
-            if(isset($aResult[$obj->method_id])){
+            if (isset($aResult[$obj->method_id])) {
                 $aResult[$obj->method_id]['permissions'][$obj->permission_id] = [
-                    'id'=>$obj->permission_id,
-                    'display_name'=>$obj->permission_name,
-                    'has_permission'=>1,
+                    'id' => $obj->permission_id,
+                    'display_name' => $obj->permission_name,
+                    'has_permission' => 1,
                 ];
-            }else{
+            } else {
                 $aResult[$obj->method_id] = [
                     'name' => $obj->method_name,
                     'id' => $obj->method_id,
-                    'permissions'=>[],
+                    'permissions' => [],
                 ];
             }
 
