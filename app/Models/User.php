@@ -52,12 +52,19 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->belongsToMany('App\Models\Role', 'yascmf_role_user', 'user_id', 'role_id');
     }
 
-    public static function getRoles($id){
+    /**
+     *  [通过用户id得到用户的角色]
+     * @param $user_id int [用户id]
+     * @return array [返回用户角色id数组]
+     */
+    public static function getRoles($user_id){
         $aMyRoles=[];
-        $aRoles=static::find($id)->roles->toArray();
-        foreach($aRoles as $role){
-            if(is_array($role['pivot']) && $role['pivot']){
-                $aMyRoles[]=$role['pivot']['role_id'];
+        $oRoles=static::find($user_id)->roles()->get();
+
+        foreach($oRoles as $role){
+            //排除用户是否新用户五角色的可能
+            if(is_object($role->pivot) && $role->pivot){
+                $aMyRoles[]=$role->pivot->role_id;
             }
         }
         return $aMyRoles;

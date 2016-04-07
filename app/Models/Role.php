@@ -22,9 +22,14 @@ class Role extends BaseModel
 
     public function permissions()
     {
-        return static::belongsToMany('App\Models\Permission', 'yascmf_permission_role', 'role_id', 'permission_id');
+        return static::belongsToMany('App\Models\PermissionMethod', 'yascmf_permission_role', 'role_id', 'permission_id');
     }
 
+    /** [用于创建和更新的函数]
+     * @param $oRole object
+     * @param $aInputs array
+     * @return mixed
+     */
     public function compileContent($oRole, $aInputs)
     {
 
@@ -36,17 +41,23 @@ class Role extends BaseModel
         return $oRole;
     }
 
-    public static function getPermissions($id)
+    /** [得到角色的菜单数组，即模块权限数组]
+     * @param $aRoleId array
+     * @return array
+     */
+    public static function getMenus($aRoleIds)
     {
         $aMyPers = [];
-        $aPermissions = static::find($id)->permissions->toArray();
+        $aPermissions = static::whereIn('id', $aRoleIds)->get();
         foreach ($aPermissions as $per) {
-            foreach ($per as $key => $value) {
-                if ($key === 'pivot') {
-                    $aMyPers[] = $value['permission_id'];
+            $oTmp = $per->permissions()->get();
+            foreach ($oTmp as $value) {
+                if ($value->permission_name == '模块访问') {
+                    $aMyPers[$value->pivot->role_id][] = $value->toArray();
                 }
             }
         }
         return $aMyPers;
     }
+
 }

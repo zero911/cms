@@ -14,7 +14,8 @@
         "laravelcollective/html": "~5.0",
         "predis/predis": "^1.0",
         "mews/captcha": "~2.0",
-        "ixudra/curl": "6.*"
+        "ixudra/curl": "6.*",
+        "soapbox/laravel-formatter": "2.x"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

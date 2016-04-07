@@ -8,9 +8,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RoleUser;
-use App\Models\PermissionRole;
-use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use Session;
 
 class HomeController extends AdminBaseController
@@ -21,13 +20,15 @@ class HomeController extends AdminBaseController
      */
     public function getHome()
     {
-        $iUserId=Session::get('admin_user_id');
-        //得到当前用户的角色id
-        $iRoleId = RoleUser::getRoleByUserId($iUserId);
-        //等到当前用户所有的权限id数组
-        $aPermissionIds = PermissionRole::getPermissionIdByRoleId($iRoleId);
-        //得到当前用户的所有权限对象
-        $oPermissions = Permission::getPermissionByPermissionIds($aPermissionIds);
-        return view('back.index',['oPermissions'=>$oPermissions]);
+        $iUserId = Session::get('admin_user_id');
+
+        $aRoleIds = User::getRoles($iUserId);
+
+        if (count($aRoleIds) < 1) {
+            return view('back.index', ['msg' => '当前用户无角色信息，请联系超级管理员']);
+        }
+        $aPermissions = Role::getMenus($aRoleIds);
+
+        return view('back.index', ['aPermissions' => $aPermissions]);
     }
 }

@@ -34,7 +34,7 @@ class MethodController extends AdminBaseController
         $this->setVars('_title', __('_basic.method'));
         $this->setVars('parents', $sModel::getTopMethods());
         $this->setVars('methods', $sModel::getMethods());
-        pr($sModel->getTrees());exit;
+//        pr($sModel->getTrees());exit;
     }
 
     /**

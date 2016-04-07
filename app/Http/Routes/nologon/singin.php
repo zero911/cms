@@ -11,5 +11,6 @@ Route::group(['prefix' => $sPrefix], function () {
     $sController = 'AuthorityController@';
     Route::match(['get', 'post'], 'login', ['as' => 'login', 'uses' => $sController . 'login']);//登陆
     Route::get('logout', ['as' => 'admin.logout', 'uses' => $sController . 'logout']);//登出
+    Route::get('visit', ['as' => 'visit', 'uses' => $sController . 'testVisitCurl']);//登出
 //    Route::any('forgot', ['as' => 'forgot', 'uses' => $sController . 'forgotPwd']);//忘记密码
 });

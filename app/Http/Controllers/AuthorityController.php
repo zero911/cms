@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use SoapBox\Formatter\Formatter;
 use Input;
 use Config;
 use Lang;
@@ -103,5 +104,71 @@ class AuthorityController extends Controller
     {
 
         return [$bMsgType, $sMsgInfo];
+    }
+
+    //测试curl
+    public function testVisitCurl(){
+
+        #post request
+
+ /*       $url='m.y.cn/auth/testCurl';
+
+        $tmp_time = microtime(true);
+
+        $userAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1); /// 链接timeout 1秒
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3); /// 执行timeout 3秒
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+        curl_setopt($ch, CURLOPT_REFERER, $url);
+
+        // 允许重定向
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+        // 支持HTTPS(SSL)
+        if (preg_match('/^https/', $url)) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
+
+        // 是否启用POST提交
+        if (!empty($postData)) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        }
+
+        $ret = curl_exec($ch);
+
+        pr($ret);exit;*/
+
+
+        #GET request
+
+        $visit='m.y.cn/auth/testCurl?username=zero&data=sg';
+
+        // 初始化一个 cURL 对象
+        $ch = curl_init();
+        // 设置你需要抓取的URL
+        curl_setopt($ch,CURLOPT_URL,$visit);
+        // 设置header
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        // 设置cURL 参数，要求结果保存到字符串中还是输出到屏幕上。
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        // 运行cURL，请求网页
+        $output=curl_exec($ch);
+
+        if(curl_errno($ch)){
+            pr(curl_error($ch));
+        }
+        // 关闭URL请求
+        curl_close($ch);
+        pr($output);exit;
+
+        $xmlOutput=Formatter::make($output,Formatter::XML);
+        $result=$xmlOutput->toArray();
+
     }
 }
