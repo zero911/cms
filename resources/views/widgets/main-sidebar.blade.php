@@ -56,6 +56,8 @@
             <!--//控制台 active treeview-->
 
             <!--内容管理 treeview-->
+            @foreach($aPermissions as $permission)
+                @foreach($permission as $per)
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-edit"></i>
@@ -69,8 +71,9 @@
                     <li><a href="{{route('category.index')}}"><i class="fa fa-file-o"></i> 分类</a></li>
                 </ul>
             </li>
+            @endforeach
             <!--//内容管理 treeview-->
-
+{{--
             <!--无子节点的一级导航节点-->
             <li><a href="#"><i class="fa fa-book"></i> <span>写作</span></a></li>
             <li><a href="http://g.yascmf.cn/admin/tag"><i class="fa fa-tags"></i> <span>标签</span></a></li>
@@ -140,7 +143,7 @@
                     <li><a href="#"><i class="fa fa-square-o"></i>邮件日志</a></li>
                 </ul>
             </li>
-            <!--//系统管理 treeview-->
+            <!--//系统管理 treeview-->--}}
 
         </ul><!-- /.sidebar-menu -->
     </section>
