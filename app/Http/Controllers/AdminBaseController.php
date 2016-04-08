@@ -231,14 +231,14 @@ class AdminBaseController extends Controller
 
         $user_id = Session::get('admin_user_id');
         $aMethod = User::getRights($user_id, false);
+//        pr($aMethod);exit;
         //用户无角色或者无权限直接false
         if (!is_array($aMethod) || count($aMethod) < 1) return false;
         //得到当前路由名称
         $sCurrentRouteName = Route::currentRouteName();
         //组装路由格式
-        $sCurrentRouteName = "route('" . $sCurrentRouteName . "')";
-        //定义返回权限的数组，默认将首页写入权限中
-        $aResult = ["route('admin.home')"];
+        //定义返回权限的数组，默认将首页\登录页写入权限中
+        $aResult = ['admin.home','auth.login','auth.logout'];
         foreach ($aMethod as $method) {
             $aResult[] = $method['url'];
             if (isset($method['kids']) && $method['kids']) {

@@ -46,18 +46,24 @@ class Role extends BaseModel
      * @param $is_menu boolean true|false true仅获取菜单模块id
      * @return array
      */
-    public static function getMethods($aRoleIds,$is_menu=true)
+    public static function getMethods($aRoleIds, $is_menu = true)
     {
         $aMethodIds = [];
         $aPermissions = static::whereIn('id', $aRoleIds)->get();
         foreach ($aPermissions as $per) {
             $oTmp = $per->permissions()->get();
             foreach ($oTmp as $value) {
-                if($is_menu){
+                if ($is_menu) {
                     if ($value->permission_name == '模块访问') {
                         $aMethodIds[] = $value->method_id;
                     }
-                }else{
+                } else {
+/*                    $aMethodIds[$value->method_id][] = [
+                        'permission_name' => $value->permission_name,
+                        'permission_id' => $value->permission_id,
+                        'method_id' => $value->method_id,
+                        'method_name' => $value->method_name,
+                    ];*/
                     $aMethodIds[] = $value->method_id;
                 }
 

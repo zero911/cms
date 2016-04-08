@@ -137,9 +137,9 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         if (count($aRoleIds) < 1) {
             return null;
         }
-        //得到用户的所有菜单模块id
+        //得到用户的所有模块id
         $aMethodIds = Role::getMethods($aRoleIds,$is_menu);
-        //得到所有当前用户的所有菜单
+        //得到所有当前用户的所有模块
         $aMethods = Methods::getTrees($aMethodIds);
         return $aMethods;
     }

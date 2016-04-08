@@ -67,7 +67,7 @@
                         <ul class="treeview-menu" style="display: none;">
                             @if(is_array($menu['kids']) && $menu['kids'])
                                 @foreach($menu['kids'] as $kid)
-                                    <li><a href="{{$kid['url']}}">
+                                    <li><a href="{{route($kid['url'])}}">
                                             <i class="fa fa-file-o"></i>{{friendsKidMenus($kid['name'])}}</a></li>
                                 @endforeach
                             @endif
