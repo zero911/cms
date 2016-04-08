@@ -84,13 +84,14 @@ class Methods extends BaseModel
     }
 
     /** [按照分类得到所有id]
+     * @param $aMethodId array
      * @return string
      */
-    public function getTrees()
+    public static function getTrees($aMethodId)
     {
         $tmp = [];
-        $oTopMethods = $this->getTopMethods()->toArray();
-        $oMethods = static::where('is_actived', '=', 1)->get()->toArray();
+        $oTopMethods = static::getTopMethods()->toArray();
+        $oMethods = static::where('is_actived', '=', 1)->whereIn('id',$aMethodId)->get()->toArray();
         foreach ($oTopMethods as $top) {
             foreach ($oMethods as $method) {
                 if ($method['pid'] == $top['id']) {

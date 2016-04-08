@@ -14,9 +14,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-//use Zizaco\Entrust\Traits\EntrustUserTrait;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Role;
+use App\Models;
+
 
 class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract
 {
@@ -123,5 +124,23 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         }
         $oModel->user_type=$user_type;
         return $oModel;
+    }
+
+    /** 得到用户权限列表
+     * @param $user_id int 用户id
+     * @param $is_menu boolean true|false 是否菜单权限
+     * @return null|array
+     */
+    public static function getRights($user_id,$is_menu){
+        $aRoleIds = static::getRoles($user_id);
+
+        if (count($aRoleIds) < 1) {
+            return null;
+        }
+        //得到用户的所有菜单模块id
+        $aMethodIds = Role::getMethods($aRoleIds,$is_menu);
+        //得到所有当前用户的所有菜单
+        $aMethods = Methods::getTrees($aMethodIds);
+        return $aMethods;
     }
 }

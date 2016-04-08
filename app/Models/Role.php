@@ -41,23 +41,28 @@ class Role extends BaseModel
         return $oRole;
     }
 
-    /** [得到角色的菜单数组，即模块权限数组]
+    /** [得到角色的模块id数组，即模块权限数组]
      * @param $aRoleId array
+     * @param $is_menu boolean true|false true仅获取菜单模块id
      * @return array
      */
-    public static function getMenus($aRoleIds)
+    public static function getMethods($aRoleIds,$is_menu=true)
     {
-        $aMyPers = [];
+        $aMethodIds = [];
         $aPermissions = static::whereIn('id', $aRoleIds)->get();
         foreach ($aPermissions as $per) {
             $oTmp = $per->permissions()->get();
             foreach ($oTmp as $value) {
-                if ($value->permission_name == '模块访问') {
-                    $aMyPers[$value->pivot->role_id][] = $value->toArray();
+                if($is_menu){
+                    if ($value->permission_name == '模块访问') {
+                        $aMethodIds[] = $value->method_id;
+                    }
+                }else{
+                    $aMethodIds[] = $value->method_id;
                 }
+
             }
         }
-        return $aMyPers;
+        return $aMethodIds;
     }
-
 }

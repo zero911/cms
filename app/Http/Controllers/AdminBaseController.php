@@ -5,15 +5,16 @@
  * Date: 16-3-23
  * Time: 下午3:44
  */
-
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Request;
 use Route;
+use Session;
+
 
 class AdminBaseController extends Controller
 {
-
     protected $modelName;
     protected $model;
     protected static $pageSize = 20;//默认pageSize;
@@ -25,14 +26,13 @@ class AdminBaseController extends Controller
     protected $controller;
     protected $resourceName = '';
     protected $bCustomCondition = false;//页面前提条件是否开启
-    protected $aCustomConditionArray=[];//页面前提条件数组,支持多个条件组合
-    protected $routeName='';
+    protected $aCustomConditionArray = [];//页面前提条件数组,支持多个条件组合
+    protected $routeName = '';
     //自定义模板部分
     protected $customView = [];//被允许的模板数组
     protected $customPath = '';//模板文件路径
     protected $view = '';//最终整个模板的全路径  path.view
-
-    protected $bIsCached=false;
+    protected $bIsCached = false;
 
     /**
      * 构造器
@@ -41,10 +41,11 @@ class AdminBaseController extends Controller
      */
     public function __construct(Request $request)
     {
-
         $this->request = $request;
         $this->initCA() or abort(404);
         $this->initModel();
+        $this->initMenus();
+        $this->checkRights() or abort(403);
     }
 
     /**初始化controller和action
@@ -70,6 +71,23 @@ class AdminBaseController extends Controller
         if ($sModelName = $this->modelName) {
             //modelName存在则实例化model
             $this->model = app()->make($sModelName);
+        }
+    }
+
+    /**
+     * 初始化菜单
+     */
+    protected function initMenus()
+    {
+
+        $iUserId = Session::get('admin_user_id');
+        //得到菜单
+        $menus = User::getRights($iUserId, true);
+        if (!is_array($menus)) {
+            $this->setVars('menus', null);
+            $this->setVars('noRoleMsg', '当前用户无角色信息，请联系超级管理员');
+        } else {
+            $this->setVars('menus', $menus);
         }
     }
 
@@ -116,7 +134,6 @@ class AdminBaseController extends Controller
      */
     public function beforeRender()
     {
-
     }
 
     /**
@@ -145,7 +162,7 @@ class AdminBaseController extends Controller
 //            pr($this->model);exit;
             $oQuery = $this->model->where('id', '>', 0);
             //若存在页面自定义条件检索则追加where
-            $oQuery=$this->bCustomCondition ? $this->model->doWhere($this->aCustomConditionArray): $oQuery;
+            $oQuery = $this->bCustomCondition ? $this->model->doWhere($this->aCustomConditionArray) : $oQuery;
         } else {
             $aData = trimArray($this->request->except('_token'));
 //            组装数组格式
@@ -165,8 +182,9 @@ class AdminBaseController extends Controller
      * @param $ids
      * @return mixed
      */
-    public function delete($ids){
-        $sModel=$this->model;
+    public function delete($ids)
+    {
+        $sModel = $this->model;
         return $sModel::destroy($ids);
     }
 
@@ -196,7 +214,6 @@ class AdminBaseController extends Controller
         $aConditionData = [];
         foreach ($aData as $key => $data) {
             if ($data != '') {//过滤空字段
-
                 if ($key == 'created_from' || $key == 'updated_from') {
                     $aConditionData[$key] = ['>=', strtotime($data)];
                 } elseif ($key == 'created_to' || $key == 'updated_to') {
@@ -207,5 +224,30 @@ class AdminBaseController extends Controller
             }
         }
         return $aConditionData;
+    }
+
+    protected function checkRights()
+    {
+
+        $user_id = Session::get('admin_user_id');
+        $aMethod = User::getRights($user_id, false);
+        //用户无角色或者无权限直接false
+        if (!is_array($aMethod) || count($aMethod) < 1) return false;
+        //得到当前路由名称
+        $sCurrentRouteName = Route::currentRouteName();
+        //组装路由格式
+        $sCurrentRouteName = "route('" . $sCurrentRouteName . "')";
+        //定义返回权限的数组，默认将首页写入权限中
+        $aResult = ["route('admin.home')"];
+        foreach ($aMethod as $method) {
+            $aResult[] = $method['url'];
+            if (isset($method['kids']) && $method['kids']) {
+                foreach ($method['kids'] as $item) {
+                    $aResult[] = $item['url'];
+                }
+            }
+        }
+        //判断权限部分
+        return in_array($sCurrentRouteName, $aResult) ? true : false;
     }
 }

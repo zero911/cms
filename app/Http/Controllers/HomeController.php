@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Http\Controllers\AdminBaseController;
 use App\Models\User;
 use Session;
 
@@ -21,14 +21,11 @@ class HomeController extends AdminBaseController
     public function getHome()
     {
         $iUserId = Session::get('admin_user_id');
-
-        $aRoleIds = User::getRoles($iUserId);
-
-        if (count($aRoleIds) < 1) {
-            return view('back.index', ['msg' => '当前用户无角色信息，请联系超级管理员']);
+        //得到菜单
+        $menus=User::getRights($iUserId,true);
+        if(!is_array($menus)){
+            return view('back.view',['menus'=>null,'noRoleMsg' => '当前用户无角色信息，请联系超级管理员']);
         }
-        $aPermissions = Role::getMenus($aRoleIds);
-
-        return view('back.index', ['aPermissions' => $aPermissions]);
+        return view('back.index', ['menus' => $menus]);
     }
 }
