@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
 use Cache;
+use App\Models\SystemLogger;
+use Session;
 
 class MethodController extends AdminBaseController
 {
@@ -91,8 +93,12 @@ class MethodController extends AdminBaseController
             }
             $oContent = $sModel->saveContent($oMethod, $aData, false);
             $bSucc = $oContent->save();
-            return $bSucc ? $this->goBackToIndex('success', __('_system.method-edit-success')) :
-                $this->goBack('error', __('_system.method-edit-error'));
+            if($bSucc){
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'编辑模块:'.$id);
+                return $this->goBackToIndex('success', __('_system.method-edit-success'));
+            }
+            return $this->goBack('error', __('_system.method-edit-error'));
         }
         $this->setVars('method', $oMethod);
         return $this->render();
@@ -135,7 +141,8 @@ class MethodController extends AdminBaseController
                 return $this->goBack('error', __('_basic.method-exist'));
             }
             if ($bSucc = $oMethod->save()) {
-
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建系统模块:'.$oMethod->id);
                 return $this->goBackToIndex('success', __('_system.method-create-success'));
             } else {
                 return $this->goBack('error', __('_system.method-create-error'));
@@ -151,8 +158,12 @@ class MethodController extends AdminBaseController
     public function destroy($ids)
     {
         $bSucc = $this->delete($ids);
-        return $bSucc ? $this->goBackToIndex('success', __('_system.method-destroy-success')) :
-            $this->goBack('error', __('_system.method-destroy-error'));
+        if($bSucc){
+            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'删除删除模块:'.$ids);
+            return $this->goBackToIndex('success', __('_system.method-destroy-success'));
+        }
+        return $this->goBack('error', __('_system.method-destroy-error'));
     }
 
     public function setPermissionByRole($role_id)
@@ -168,6 +179,8 @@ class MethodController extends AdminBaseController
             $aData = trimArray(Input::all());
             //调用设置模块权限函数
             $this->setPermissions($aData, $role_id);
+            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'设置模块权限:');
             return $this->goBack('info', __('_system.method-permission-set'));
         }
         $oMethods = $this->model;

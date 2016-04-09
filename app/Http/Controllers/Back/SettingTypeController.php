@@ -12,6 +12,8 @@ use Cache;
 use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
+use App\Models\SystemLogger;
+use Session;
 
 class SettingTypeController extends AdminBaseController
 {
@@ -75,6 +77,8 @@ class SettingTypeController extends AdminBaseController
             $bSucc = $sModel->save();
             if ($bSucc) {
                 Cache::put('system_type', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建动态系统设置类型:'.$sModel->id);
                 return $this->goBackToIndex('success', __('_system.systemType-create-success'));
             } else {
                 return $this->goBack('error', __('_system.systemType-create-error'));
@@ -106,6 +110,8 @@ class SettingTypeController extends AdminBaseController
             $bSucc = $oSystemType->save();
             if ($bSucc) {
                 Cache::put('system_type', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'修改系统动态类型:'.$id);
                 return $this->goBackToIndex('success', __('_system.systemType-edit-success'));
             } else {
                 return $this->goBack('error', __('_system.systemType-edit-error'));
@@ -120,6 +126,8 @@ class SettingTypeController extends AdminBaseController
         $bSucc = $this->delete($ids);
         if ($bSucc) {
             Cache::put('system_type', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
+            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'删除系统动态类型:'.$ids);
             return $this->goBack('success', __('_system.systemType-destroy-success'));
         } else {
             return $this->goBack('error', __('_system.systemType-destroy-error'));

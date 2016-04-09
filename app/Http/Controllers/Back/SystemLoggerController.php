@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
 
 class SystemLoggerController extends AdminBaseController
@@ -43,5 +44,58 @@ class SystemLoggerController extends AdminBaseController
         }
         $this->setVars('sys_log', $oLogger);
         return $this->render();
+    }
+
+    /**
+     * 导出excel
+     */
+    public function exportExcel() {
+        $sModel=$this->model;
+        $oLogger=$sModel::all();//所有logger对象
+        $userType = User::$userType;//用户类型
+        Excel::create('Filename', function($excel) use($oLogger,$userType) {
+
+            $excel->sheet('系统日志excle', function($sheet) use($oLogger,$userType) {
+                //excle标题
+                $sheet->prependRow(1,[
+                    '操作类型','操作者','操作ip','操作URL','操作内容','操作时间',
+                ]);
+
+                $sheet->setSize(array(
+                    'A1' => array(
+                        'width'     => 30,
+                        'height'    => 20
+                    )
+                ));
+                //对每行填充数据
+                foreach($oLogger as $key => $logger){
+                    $sheet->row( $key+2,
+                        [
+                            $userType[$logger->type],
+                            $logger->user->realname,
+                            $logger->operator_ip,
+                            $logger->url,
+                            $logger->content,
+                            $logger->created_at,
+                        ]);
+                }
+            });
+
+            /**
+             * 多个sheet页
+             */
+/*            $excel->sheet('First sheet', function($sheet) {
+                $sheet->row(1, array(
+                    'test1', 'test2'
+                ));
+            });
+            // Our second sheet
+            $excel->sheet('Second sheet', function($sheet) {
+                $sheet->fromArray(array(
+                    array('data1', 'data2'),
+                    array('data3', 'data4')
+                ));
+            });*/
+        })->export('xls');
     }
 }

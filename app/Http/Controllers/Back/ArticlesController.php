@@ -13,7 +13,6 @@ use App\Models\Articles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Metas;
 use Illuminate\Support\Facades\Validator;
-use Request;
 use Input;
 use App\Models\Flags;
 use App\Models\SystemLogger;
@@ -55,7 +54,7 @@ class ArticlesController extends AdminBaseController
         if (!is_object($oArticle)) {
             return $this->goBack('error', __('_basic.article-error'));
         }
-        if (Request::isMethod('post')) {
+        if ($this->request->isMethod('post')) {
 //            pr(Input::all());exit;
             $aData = trimArray(Input::all());
             //表单验证
@@ -66,7 +65,8 @@ class ArticlesController extends AdminBaseController
             $oContent = $sModel->saveContent($oArticle, $aData, $type = 'article');
             $bSucc=$oContent->save();
             if($bSucc){
-                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'更新文章');
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'更新文章:'.$id);
                 return $this->goBackToIndex('success', __('_articles.article-edit-success'));
             }
             return $this->goBack('error', __('_articles.article-edit-error'));
@@ -99,7 +99,7 @@ class ArticlesController extends AdminBaseController
      */
     public function create(){
 
-        if(Request::isMethod('post')){
+        if($this->request->isMethod('post')){
             $aData=trimArray(Input::all());
             $sModel=$this->model;
             $validate=Validator::make($aData,$sModel::$rules);
@@ -109,7 +109,8 @@ class ArticlesController extends AdminBaseController
             $oArticle=$sModel->saveContent(new Articles() ,$aData,$type='article');
             if($bSucc=$oArticle->save()){
                 Metas::setCountById($oArticle->id,'category');//count+1
-                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'创建文章');
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建文章:'.$oArticle->id);
                 return $this->goBackToIndex('success', __('_articles.article-create-success'));
             }else{
                 return $this->goBack('error', __('_articles.article-create-error'));
@@ -125,7 +126,8 @@ class ArticlesController extends AdminBaseController
     public function destroy($ids){
         $bSucc=$this->delete($ids);
         if($bSucc){
-            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'删除文章');
+            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'删除文章:'.$ids);
             return $this->goBackToIndex('success', __('_articles.article-destroy-success'));
         }
             return $this->goBack('error', __('_articles.article-destroy-error'));

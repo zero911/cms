@@ -13,6 +13,8 @@ use App\Http\Controllers\AdminBaseController;
 use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
+use App\Models\SystemLogger;
+use Session;
 
 class MetasController extends AdminBaseController
 {
@@ -41,6 +43,7 @@ class MetasController extends AdminBaseController
             }
             $oMeta=$sModel->compileData($sModel,$aData);
             if($bSucc=$oMeta->save()){
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'创建标记');
                 return $this->goBackToIndex('success',__('_articles.category-create-success'));
             }else{
                 return $this->goBackToIndex('error',__('_articles.category-create-error'));
@@ -66,6 +69,7 @@ class MetasController extends AdminBaseController
             }
             $_oMeta=$sModel->compileData($oMeta,$aData);
             if($bSucc=$_oMeta->save()){
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'编辑标记');
                 return $this->goBackToIndex('success',__('_articles.category-edit-success'));
             }else{
                 return $this->goBackToIndex('error',__('_articles.category-edit-error'));
@@ -90,7 +94,10 @@ class MetasController extends AdminBaseController
 
     public function destroy($ids){
         $bSucc=$this->delete($ids);
-        return $bSucc ? $this->goBackToIndex('success', __('_articles.category-destroy-success')) :
-            $this->goBack('error', __('_articles.category-destroy-error'));
+        if($bSucc){
+            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(), $this->request->getClientIp(),$this->controller.'@'.$this->action,'删除标记');
+            return $this->goBackToIndex('success', __('_articles.category-destroy-success'));
+        }
+        return $this->goBack('error', __('_articles.category-destroy-error'));
     }
 }

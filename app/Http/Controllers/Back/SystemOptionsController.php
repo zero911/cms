@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SystemLogger;
+use Session;
 use Input;
 use Cache;
 
@@ -55,6 +57,8 @@ class SystemOptionsController extends AdminBaseController
         $bSucc=$this->model->save($aData);
         if($bSucc){
             Cache::forever('syscfg',$aData['data']);
+            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'修改系统配置');
             return route()->to('syscfg.index')->withInput()->withError('success',__('_system.system-option-edit-success'));
         }else{
             return route()->to('syscfg.index')->withInput()->withError('error',__('_system.system-option-edit-error'));

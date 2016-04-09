@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 use Cache;
 use Request;
 use Input;
+use App\Models\SystemLogger;
+use Session;
 
 class SettingController extends AdminBaseController
 {
@@ -75,6 +77,8 @@ class SettingController extends AdminBaseController
             $bSucc = $sModel->save();
             if ($bSucc) {
                 Cache::put('system', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建系统设置:'.$sModel->id);
                 return $this->goBackToIndex('success', __('_system.setting-create-success'));
             } else {
                 return $this->goBack('error', __('_system.setting-create-error'));
@@ -108,6 +112,8 @@ class SettingController extends AdminBaseController
             $bSucc = $sModel->save($aData);
             if ($bSucc) {
                 Cache::put('system', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'修改系统设置:'.$id);
                 return $this->goBackToIndex('success', __('_system.setting-edit-success'));
             } else {
                 return $this->goBack('error', __('_system.setting-edit-error'));
@@ -122,6 +128,8 @@ class SettingController extends AdminBaseController
         $bSucc = $this->delete($ids);
         if ($bSucc) {
             Cache::put('setting', $this->model->where('id', '>', 0)->get(), 60 * 24 * 7);
+            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建单页:'.$ids);
             return $this->goBack('success', __('_system.setting-destroy-success'));
         } else {
             return $this->goBack('error', __('_system.setting-destroy-error'));

@@ -13,7 +13,8 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
-
+use App\Models\SystemLogger;
+use Session;
 
 class RoleController extends AdminBaseController
 {
@@ -52,12 +53,8 @@ class RoleController extends AdminBaseController
             $oContent = $sModel->compileContent($oRole, $aData);
             $bSucc = $oContent->save();
             if ($bSucc) {
-                if (array_key_exists('permissions', $aData)) {
-                    $aPers = $aData['permissions'];
-                    if (is_array($aPers) && $aPers) {
-                        $oContent->permissions()->sync($aPers);
-                    }
-                }
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'修改角色:'.$id);
                 return $this->goBackToIndex('success', __('_user.role-edit-success'));
             } else {
                 return $this->goBack('error', __('_user.role-edit-error'));
@@ -106,12 +103,8 @@ class RoleController extends AdminBaseController
 //            pr($oManager);exit;
             if ($bSucc = $oRole->save()) {
                 //管理员用户创建角色
-                if (array_key_exists('permissions', $aData)) {
-                    $aPers = $aData['permissions'];
-                    if (is_array($aPers) && $aPers) {
-                        $oRole->permissions()->sync($aPers);
-                    }
-                }
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建角色:'.$oRole->id);
                 return $this->goBackToIndex('success', __('_user.role-create-success'));
             } else {
                 return $this->goBack('error', __('_user.role-create-error'));
@@ -127,6 +120,8 @@ class RoleController extends AdminBaseController
     public function destroy($ids)
     {
         $bSucc = $this->delete($ids);
+        !$bSucc or SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+            $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建单页:'.$ids);
         return $bSucc ? $this->goBackToIndex('success', __('_user.role-destroy-success')) :
             $this->goBack('error', __('_user.role-destroy-error'));
     }

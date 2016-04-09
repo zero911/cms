@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
 use App\Models\Flags;
+use App\Models\SystemLogger;
+use Session;
 
 class PageController extends AdminBaseController
 {
@@ -63,6 +65,8 @@ class PageController extends AdminBaseController
             }
             $oContent = $sModel->saveContent($oArticle, $aData, $type = 'page');
             $bSucc=$oContent->save();
+            !$bSucc or SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'修改单页:'.$id);
             return $bSucc ? $this->goBackToIndex('success', __('_articles.page-edit-success')) :
                 $this->goBack('error', __('_articles.page-edit-error'));
         }
@@ -103,6 +107,8 @@ class PageController extends AdminBaseController
             }
             $oContent=$sModel->saveContent(new Articles() ,$aData,$type='page');
             $bSucc=$oContent->save();
+            !$bSucc or SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建单页:'.$oContent->id);
             return $bSucc ? $this->goBackToIndex('success', __('_articles.page-create-success')) :
                 $this->goBack('error', __('_articles.page-create-error'));
         }
@@ -115,6 +121,8 @@ class PageController extends AdminBaseController
      */
     public function destroy($ids){
         $bSucc=$this->delete($ids);
+        !$bSucc or SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+            $this->request->getClientIp(),$this->controller.'@'.$this->action,'删除单页:'.$ids);
         return $bSucc ? $this->goBackToIndex('success', __('_articles.page-destroy-success')) :
             $this->goBack('error', __('_articles.page-destroy-error'));
     }

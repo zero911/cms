@@ -16,6 +16,7 @@ use Request;
 use Input;
 use App\Models\User;
 use App\Models\SystemLogger;
+use Session;
 
 class ManagerController extends AdminBaseController
 {
@@ -70,13 +71,13 @@ class ManagerController extends AdminBaseController
                 if (array_key_exists('role', $aData) && $aData['role']) {
                     $oContent->roles()->attach($aData['role']);
                 }
-                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'修改管理员资料');
+                SystemLogger::writeLog(Session::get('admin_user_id'), $this->request->url(), $this->request->getClientIp(), $this->controller . '@' . $this->action, '修改管理员资料:'.$id);
                 return $this->goBackToIndex('success', __('_user.manager-edit-success'));
             } else {
                 return $this->goBack('error', __('_user.manager-edit-error'));
             }
         }
-        $this->setVars('myRoles',$sModel::getRoles($id));
+        $this->setVars('myRoles', $sModel::getRoles($id));
         $this->setVars('user', $oManager);
         return $this->render();
     }
@@ -114,8 +115,8 @@ class ManagerController extends AdminBaseController
                 return $this->goBack('error', __('_basic.validate-error'));
             }
             $oManager = $sModel->compileContent($sModel, $aData, $user_type = 'manager');
-/*            pr($oManager);
-            pr($aData);exit;*/
+            /*            pr($oManager);
+                        pr($aData);exit;*/
             if (!is_object($oManager)) {
                 return $this->goBack('error', __('_user.manager-exist'));
             }
@@ -124,7 +125,8 @@ class ManagerController extends AdminBaseController
                 if (array_key_exists('role', $aData) && $aData['role']) {
                     $oManager->roles()->attach($aData['role']);
                 }
-                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'删除文章');
+                SystemLogger::writeLog(Session::get('admin_user_id'), $this->request->url(),
+                    $this->request->getClientIp(), $this->controller . '@' . $this->action, '创建管理员:'.$oManager->id);
                 return $this->goBackToIndex('success', __('_user.manager-create-success'));
             } else {
                 return $this->goBack('error', __('_user.manager-create-error'));
@@ -140,7 +142,11 @@ class ManagerController extends AdminBaseController
     public function destroy($ids)
     {
         $bSucc = $this->delete($ids);
-        return $bSucc ? $this->goBackToIndex('success', __('_user.manager-destroy-success')) :
-            $this->goBack('error', __('_user.manager-destroy-error'));
+        if ($bSucc) {
+            SystemLogger::writeLog(Session::get('admin_user_id'), $this->request->url(),
+                $this->request->getClientIp(), $this->controller . '@' . $this->action, '删除管理员:'.$ids);
+            return $this->goBackToIndex('success', __('_user.manager-destroy-success'));
+        }
+        return $this->goBack('error', __('_user.manager-destroy-error'));
     }
 }

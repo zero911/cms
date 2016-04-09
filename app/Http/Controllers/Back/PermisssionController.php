@@ -14,6 +14,7 @@ use Input;
 use Cache;
 use Session;
 use App\Models\Permission;
+use App\Models\SystemLogger;
 
 class PermissionController extends AdminBaseController
 {
@@ -57,6 +58,8 @@ class PermissionController extends AdminBaseController
             }
             $oContent = $sModel->saveContent($oPermission, $aData, false);
             $bSucc = $oContent->save();
+            !$bSucc or SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                $this->request->getClientIp(),$this->controller.'@'.$this->action,'修改权限:'.$id);
             return $bSucc ? $this->goBackToIndex('success', __('_user.permission-edit-success')) :
                 $this->goBack('error', __('_user.permission-edit-error'));
         }
@@ -100,6 +103,8 @@ class PermissionController extends AdminBaseController
                 return $this->goBack('error', __('_basic.permission-exist'));
             }
             if ($bSucc = $oPermission->save()) {
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+                    $this->request->getClientIp(),$this->controller.'@'.$this->action,'创建单页:'.$oPermission->id);
                 return $this->goBackToIndex('success', __('_user.permission-create-success'));
             } else {
                 return $this->goBack('error', __('_user.permission-create-error'));
@@ -115,6 +120,8 @@ class PermissionController extends AdminBaseController
     public function destroy($ids)
     {
         $bSucc = $this->delete($ids);
+        !$bSucc or SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
+            $this->request->getClientIp(),$this->controller.'@'.$this->action,'删除权限:'.$ids);
         return $bSucc ? $this->goBackToIndex('success', __('_user.permission-destroy-success')) :
             $this->goBack('error', __('_user.permission-destroy-error'));
     }

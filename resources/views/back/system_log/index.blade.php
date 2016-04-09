@@ -24,8 +24,8 @@
         </div><!-- /.box-header -->
         <div class="box-body table-responsive">
             <div class="tablebox-controls">
-                <button class="btn btn-default btn-sm"><i class="fa fa-file-excel-o" title="导出为excel文件"></i></button>
-                <button class="btn btn-default btn-sm"><i class="fa fa-file-text-o" title="导出为log文本文件"></i></button>
+                <a class="btn btn-default btn-sm" href="{{route('log.exportExcel')}}"><i class="fa fa-file-excel-o" title="导出为excel文件"></i></a>
+                <a class="btn btn-default btn-sm"><i class="fa fa-file-text-o" title="导出为log文本文件"></i></a>
             </div>
             <table class="table table-hover table-bordered">
                 <tbody>
