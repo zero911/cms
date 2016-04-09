@@ -4,7 +4,8 @@
 
 1.创建编辑管理员无法成功，未找到原因
 2·暂时未实现所有的页面顶部搜索功能
-3.页面级权限如何控制暂时会想到好的办法
+3.页面级权限如何控制暂时会想到好的办法  ---解决
+
 
 perimission 参考文档
 
@@ -27,7 +28,7 @@ cms权限设计思路
       `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
       `method_code` VARCHAR(45) NOT NULL DEFAULT '' COMMENT '模块代码',
       `name` VARCHAR(45) NOT NULL DEFAULT '' COMMENT '模块名称',
-      `url` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '路由地址',
+      `url` VARCHAR(1000) NOT NULL DEFAULT '' COMMENT '路由地址',
       `created_at` TIMESTAMP NULL COMMENT '',
       `updated_at` TIMESTAMP NULL COMMENT '',
       PRIMARY KEY (`id`)  COMMENT '',

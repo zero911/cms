@@ -168,7 +168,10 @@ if (!function_exists('cur_nav')) {
     }
 }
 
-
+/** 后台二级菜单名称友好处理   一级菜单名/二级菜单名 ==》 二级菜单名
+ * @param $sKidMenuName
+ * @return mixed
+ */
 function friendsKidMenus($sKidMenuName)
 {
 

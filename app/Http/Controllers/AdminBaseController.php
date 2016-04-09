@@ -33,6 +33,7 @@ class AdminBaseController extends Controller
     protected $customPath = '';//模板文件路径
     protected $view = '';//最终整个模板的全路径  path.view
     protected $bIsCached = false;
+    protected $defaultRights=['admin.home','auth.login','auth.logout','console.cache'];//默认拥有权限，默认将首页\登录页\清空缓存写入权限中
 
     /**
      * 构造器
@@ -236,14 +237,16 @@ class AdminBaseController extends Controller
         if (!is_array($aMethod) || count($aMethod) < 1) return false;
         //得到当前路由名称
         $sCurrentRouteName = Route::currentRouteName();
-        //组装路由格式
-        //定义返回权限的数组，默认将首页\登录页写入权限中
-        $aResult = ['admin.home','auth.login','auth.logout'];
+        //定义返回权限的数组，并合并默认权限
+        $aResult = $this->defaultRights;
         foreach ($aMethod as $method) {
             $aResult[] = $method['url'];
             if (isset($method['kids']) && $method['kids']) {
                 foreach ($method['kids'] as $item) {
-                    $aResult[] = $item['url'];
+                    $aUrl=explode(',',$item['url']);
+                    foreach($aUrl as $url){
+                        $aResult[] = $url;
+                    }
                 }
             }
         }

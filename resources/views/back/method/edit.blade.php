@@ -32,6 +32,7 @@
                     <div class="form-group">
                         <label>模块URL地址
                             <small class="text-red">*</small>
+                            <span class="text-red small">此处谨慎操作，未作容错处理。友情提示：index一定要放到第一个</span></label>
                         </label>
                         <input type="text" class="form-control" name="url"
                                value="{{ Input::old('url', isset($method) ? $method->url : null) }}"

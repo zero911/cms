@@ -8,8 +8,10 @@
 namespace App\Http\Controllers;
 use Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 use Auth;
 use Cache;
+use Session;
 
 class AdminController extends AdminBaseController
 {
@@ -99,10 +101,12 @@ class AdminController extends AdminBaseController
         Cache::forget('setting');
         Cache::forget('permission_method');
 
-        $aData=[
-            'success'=>'重建缓存成功!',
-            'oUser'=>Auth::user(),
-        ];
-        return view('back.console.cache')->with($aData);
+        $iUserId = Session::get('admin_user_id');
+        //得到菜单
+        $menus=User::getRights($iUserId,true);
+        if(!is_array($menus)){
+            return view('back.console.cache',['menus'=>null,'success'=>'重建缓存成功!']);
+        }
+        return view('back.console.cache',['menus'=>$menus,'success'=>'重建缓存成功!']);
     }
 }

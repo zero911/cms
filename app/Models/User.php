@@ -48,6 +48,17 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         'phone' => 'numeric',
     ];
 
+    //系统的user类型常量
+    const USER_TYPE_VISITOR = 'vistor';
+    const USER_TYPE_MANAGER = 'manager';
+    const USER_TYPE_CUSTOMER = 'customer';
+
+    public static $userType = [
+        self::USER_TYPE_CUSTOMER => '投资型用户',
+        self::USER_TYPE_MANAGER => '系统管理员',
+        self::USER_TYPE_VISITOR => '游客'
+    ];
+
     public function roles()
     {
         return $this->belongsToMany('App\Models\Role', 'yascmf_role_user', 'user_id', 'role_id');
@@ -58,14 +69,15 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
      * @param $user_id int [用户id]
      * @return array [返回用户角色id数组]
      */
-    public static function getRoles($user_id){
-        $aMyRoles=[];
-        $oRoles=static::find($user_id)->roles()->get();
+    public static function getRoles($user_id)
+    {
+        $aMyRoles = [];
+        $oRoles = static::find($user_id)->roles()->get();
 
-        foreach($oRoles as $role){
+        foreach ($oRoles as $role) {
             //排除用户是否新用户五角色的可能
-            if(is_object($role->pivot) && $role->pivot){
-                $aMyRoles[]=$role->pivot->role_id;
+            if (is_object($role->pivot) && $role->pivot) {
+                $aMyRoles[] = $role->pivot->role_id;
             }
         }
         return $aMyRoles;
@@ -122,7 +134,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         if (array_key_exists('email', $aInputs)) {
             $oModel->email = $aInputs['email'];
         }
-        $oModel->user_type=$user_type;
+        $oModel->user_type = $user_type;
         return $oModel;
     }
 
@@ -131,16 +143,17 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
      * @param $is_menu boolean true|false 是否菜单权限
      * @return null|array
      */
-    public static function getRights($user_id,$is_menu){
+    public static function getRights($user_id, $is_menu)
+    {
         $aRoleIds = static::getRoles($user_id);
 
         if (count($aRoleIds) < 1) {
             return null;
         }
         //得到用户的所有模块id
-        $aMethodIds = Role::getMethods($aRoleIds,$is_menu);
+        $aMethodIds = Role::getMethods($aRoleIds, $is_menu);
         //得到所有当前用户的所有模块
-        $aMethods = Methods::getTrees($aMethodIds);
+        $aMethods = Methods::getTrees($aMethodIds, $is_menu);
         return $aMethods;
     }
 }

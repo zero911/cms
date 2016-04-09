@@ -85,9 +85,10 @@ class Methods extends BaseModel
 
     /** [按照分类得到所有id]
      * @param $aMethodId array
+     * @param $is_menu boolean true|false
      * @return string
      */
-    public static function getTrees($aMethodId)
+    public static function getTrees($aMethodId,$is_menu)
     {
         $tmp = [];
         $oTopMethods = static::getTopMethods()->toArray();
@@ -95,7 +96,22 @@ class Methods extends BaseModel
         foreach ($oTopMethods as $top) {
             foreach ($oMethods as $method) {
                 if ($method['pid'] == $top['id']) {
-                    $top['kids'][] = $method;
+                    if(!$is_menu){
+                        $top['kids'][] = $method;
+                    }else{//如果菜单权限则整合url
+                        $newMethod=[
+                            'id'=>$method['id'],
+                            'method_code'=>$method['method_code'],
+                            'name'=>$method['name'],
+                            'url'=>explode(',',$method['url'])[0],
+                            'is_actived'=>$method['is_actived'],
+                            'pid'=>$method['pid'],
+                            'created_at'=>$method['created_at'],
+                            'updated_at'=>$method['updated_at'],
+                        ];
+                        $top['kids'][] = $newMethod;
+                    }
+
                 }
             }
             $tmp[] = $top;

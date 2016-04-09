@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SystemLogger;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -41,6 +42,7 @@ class AuthorityController extends Controller
                 return redirect()->back()->withInput()->withErrors('error', $aResultData[1]);
             }
             //登陆成功
+            SystemLogger::writeLog(Session::get('admin_user_id'),$request->url(),$request->getClientIp(),'AuthorityController@login','登陆系统');
             return route('admin.home');
         }
         return view('auth.login');
@@ -50,10 +52,12 @@ class AuthorityController extends Controller
      * [登出]
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function logout()
+    public function logout(Request $request)
     {
+        $user_id=Auth::user()->id;
         Auth::logout();
         Session::flush();
+        SystemLogger::writeLog($user_id,$request->url(),$request->getClientIp(),'AuthorityController@logout','登出系统');
         return redirect()->to('auth/login');
     }
 

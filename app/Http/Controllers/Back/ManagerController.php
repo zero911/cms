@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
 use App\Models\User;
+use App\Models\SystemLogger;
 
 class ManagerController extends AdminBaseController
 {
@@ -69,6 +70,7 @@ class ManagerController extends AdminBaseController
                 if (array_key_exists('role', $aData) && $aData['role']) {
                     $oContent->roles()->attach($aData['role']);
                 }
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'修改管理员资料');
                 return $this->goBackToIndex('success', __('_user.manager-edit-success'));
             } else {
                 return $this->goBack('error', __('_user.manager-edit-error'));
@@ -122,6 +124,7 @@ class ManagerController extends AdminBaseController
                 if (array_key_exists('role', $aData) && $aData['role']) {
                     $oManager->roles()->attach($aData['role']);
                 }
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'删除文章');
                 return $this->goBackToIndex('success', __('_user.manager-create-success'));
             } else {
                 return $this->goBack('error', __('_user.manager-create-error'));

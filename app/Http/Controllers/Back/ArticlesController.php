@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Validator;
 use Request;
 use Input;
 use App\Models\Flags;
+use App\Models\SystemLogger;
+use Session;
 
 class ArticlesController extends AdminBaseController
 {
@@ -63,8 +65,11 @@ class ArticlesController extends AdminBaseController
             }
             $oContent = $sModel->saveContent($oArticle, $aData, $type = 'article');
             $bSucc=$oContent->save();
-            return $bSucc ? $this->goBackToIndex('success', __('_articles.article-edit-success')) :
-                $this->goBack('error', __('_articles.article-edit-error'));
+            if($bSucc){
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'更新文章');
+                return $this->goBackToIndex('success', __('_articles.article-edit-success'));
+            }
+            return $this->goBack('error', __('_articles.article-edit-error'));
         }
         $this->setVars('oArticle', $oArticle);
         return $this->render();
@@ -104,6 +109,7 @@ class ArticlesController extends AdminBaseController
             $oArticle=$sModel->saveContent(new Articles() ,$aData,$type='article');
             if($bSucc=$oArticle->save()){
                 Metas::setCountById($oArticle->id,'category');//count+1
+                SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'创建文章');
                 return $this->goBackToIndex('success', __('_articles.article-create-success'));
             }else{
                 return $this->goBack('error', __('_articles.article-create-error'));
@@ -118,7 +124,10 @@ class ArticlesController extends AdminBaseController
      */
     public function destroy($ids){
         $bSucc=$this->delete($ids);
-        return $bSucc ? $this->goBackToIndex('success', __('_articles.article-destroy-success')) :
-            $this->goBack('error', __('_articles.article-destroy-error'));
+        if($bSucc){
+            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),$this->request->getClientIp(),$this->controller.'@'.$this->action,'删除文章');
+            return $this->goBackToIndex('success', __('_articles.article-destroy-success'));
+        }
+            return $this->goBack('error', __('_articles.article-destroy-error'));
     }
 }

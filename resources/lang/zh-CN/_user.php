@@ -53,6 +53,11 @@ return [
     'admin' => '超级管理员',
     'editor' => '演示',
 
+    //用户类型
+    'visitor'=>'游客',
+    'manager'=>'系统管理员',
+    'customer'=>'投资型用户',
+
     //权限常量对应参数
     'menu_permission' => '菜单权限',
     'page_permission' => '页面权限',
