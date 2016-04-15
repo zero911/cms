@@ -5,6 +5,7 @@
     <h2 class="page-header">{{__('_basic.articles-create')}}</h2>
     <form method="post" accept-charset="utf-8">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="type" value="article">
         <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
@@ -26,7 +27,7 @@
                         <label>推荐位属性</label>
                         <div class="input-group">
                             @foreach($flags as $flag)
-                                <input type="checkbox" name="flag[]" value="" />
+                                <input type="checkbox" name="flag[]" value="{{ $flag->attr }}" />
                                 <label class="choice" for="flag[]" title="{{ $flag->description }}">[{{ $flag->attr }}
                                     ]{{ $flag->display_name }}</label>
                             @endforeach

@@ -13,4 +13,5 @@ class PermissionMethod extends BaseModel
 {
     protected $table = 'yascmf_permission_method';
     public $timestamps = false;
+    public static $resourceName='permission_method';
 }

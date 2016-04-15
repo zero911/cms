@@ -13,7 +13,7 @@ class PermissionRole extends BaseModel
 {
     protected $table='yascmf_permission_role';
     public $timestamps=false;
-
+    public static $resourceName='permission_role';
     /** [获得当前角色的所有权限id]
      * @param $iRoleId
      * @return array

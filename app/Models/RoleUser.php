@@ -14,5 +14,5 @@ class RoleUser extends BaseModel
 
     protected $table='yascmf_role_user';
     public $timestamps=false;
-
+    public static $resourceName='role_user';
 }

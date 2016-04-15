@@ -82,24 +82,7 @@ class ManagerController extends AdminBaseController
         return $this->render();
     }
 
-    /** [浏览某个文章详情]
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse|mixed
-     */
-    public function view($id)
-    {
-        if (!$id) {
-            return $this->goBack('error', __('_basic.visit-error'));
-        }
-        $sModel = $this->model;
-        $oManager = $sModel::find($id);
-        if (!is_object($oManager)) {
-            return $this->goBack('error', __('_basic.manager-error'));
-        }
-//        pr($oArticle);exit;
-        $this->setVars('users', $oManager);
-        return $this->render();
-    }
+
 
     /**[创建]
      * @return \Illuminate\Http\RedirectResponse|mixed
@@ -135,18 +118,4 @@ class ManagerController extends AdminBaseController
         return $this->render();
     }
 
-    /** [删除]
-     * @param null $ids
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy($ids)
-    {
-        $bSucc = $this->delete($ids);
-        if ($bSucc) {
-            SystemLogger::writeLog(Session::get('admin_user_id'), $this->request->url(),
-                $this->request->getClientIp(), $this->controller . '@' . $this->action, '删除管理员:'.$ids);
-            return $this->goBackToIndex('success', __('_user.manager-destroy-success'));
-        }
-        return $this->goBack('error', __('_user.manager-destroy-error'));
-    }
 }

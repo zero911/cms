@@ -5,7 +5,7 @@
     <h2 class="page-header">{{__('_basic.category-create')}}</h2>
     <form method="post"  accept-charset="utf-8">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
+        <input type="hidden" name="type" value="category">
         <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <label>分类缩略名 <small class="text-red">*</small> <span class="text-green small">用于创建友好的链接形式</span></label>
                         <div class="input-group mono url_slug">
-                            <input type="text" id="slug" name="slug" autocomplete="off" value="{{ Inpu::old('slug') }}" class="slug" maxlength="10" pattern="[A-z0-9_-]+" placeholder="分类缩略名">
+                            <input type="text" id="slug" name="slug" autocomplete="off" value="{{ Input::old('slug') }}" class="slug" maxlength="10" pattern="[A-z0-9_-]+" placeholder="分类缩略名">
                         </div>
                     </div>
                     <div class="form-group">

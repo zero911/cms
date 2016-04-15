@@ -3,8 +3,9 @@
 @section('content')
     @include('widgets.content-msgInfo')
     <h2 class="page-header">{{__('_basic.articles-edit')}}</h2>
-    <form method="post" action="{{ route('article.edit', $oArticle->id) }}" accept-charset="utf-8">
+    <form method="post" action="{{ route('article.edit', $data->id) }}" accept-charset="utf-8">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="type" value="article">
         <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
@@ -20,14 +21,14 @@
                             <small class="text-red">*</small>
                         </label>
                         <input type="text" class="form-control" name="title" autocomplete="off"
-                               value="{{ Input::old('title', isset($oArticle) ? $oArticle->title : null) }}" placeholder="标题">
+                               value="{{ Input::old('title', isset($data) ? $data->title : null) }}" placeholder="标题">
                     </div>
                     <div class="form-group">
                         <label>推荐位属性</label>
                         <div class="input-group">
                             @foreach($flags as $flag)
                                 <input type="checkbox" name="flag[]"
-                                       value="{{ $flag->attr }}" {{ (check_string($oArticle->flag, $flag->attr) === true) ? 'checked' : '' }}>
+                                       value="{{ $flag->attr }}" {{ (check_string($data->flag, $flag->attr) === true) ? 'checked' : '' }}>
                                 <label class="choice" for="flag[]" title="{{ $flag->description }}">[{{ $flag->attr }}
                                     ]{{ $flag->display_name }}</label>
                             @endforeach
@@ -40,7 +41,7 @@
                                                                                              data-id="thumb"><i
                                         class="fa fa-fw fa-eye" title="预览小图"></i></a></label>
                         <input type="text" class="form-control" id="thumb" name="thumb"
-                               value="{{ Input::old('thumb', isset($oArticle) ? $oArticle->thumb : null) }}"
+                               value="{{ Input::old('thumb', isset($data) ? $data->thumb : null) }}"
                                placeholder="缩略图地址：如{{ url('') }}/assets/img/yas_logo.png">
                     </div>
                     <div class="form-group">
@@ -48,13 +49,13 @@
                             <small class="text-red">*</small>
                         </label>
                         <div class="input-group mono url_slug">
-                            @if(empty($oArticle->slug))
+                            @if(empty($data->slug))
                                 <p>{{ url('') }}/{category}/<input type="text" id="slug" name="slug" autocomplete="off"
-                                                                   value="{{ $oArticle->id }}" class="slug" maxlength="30"
+                                                                   value="{{ $data->id }}" class="slug" maxlength="30"
                                                                    pattern="[A-z0-9_-]+">.html</p>
                             @else
                                 <p>{{ url('') }}/{category}/<input type="text" id="slug" name="slug" autocomplete="off"
-                                                                   value="{{ $oArticle->slug }}" class="slug" maxlength="30"
+                                                                   value="{{ $data->slug }}" class="slug" maxlength="30"
                                                                    pattern="[A-z0-9_-]+">.html</p>
                             @endif
                         </div>
@@ -67,7 +68,7 @@
                             <select data-placeholder="选择文章分类..." class="chosen-select" style="min-width:200px;"
                                     name="category_id">
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}" {{ (Input::old('category_id', isset($oArticle) ? $oArticle->category_id : null)  === $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}" {{ (Input::old('category_id', isset($data) ? $data->category_id : null)  === $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -77,7 +78,7 @@
                             <small class="text-red">*</small>
                         </label>
                         <textarea class="form-control" id="ckeditor"
-                                  name="content">{{ Input::old('content', isset($oArticle) ? $oArticle->content : null) }}</textarea>
+                                  name="content">{{ Input::old('content', isset($data) ? $data->content : null) }}</textarea>
                         @include('scripts.endCKEditor'){{-- 引入CKEditor编辑器相关JS依赖 --}}
                     </div>
                 </div><!-- /.tab-pane -->
@@ -85,7 +86,7 @@
                     <div class="form-group">
                         <label>外链地址</label>
                         <input type="text" class="form-control" name="outer_link"
-                               value="{{ Input::old('outer_link', isset($oArticle) ? $oArticle->outer_link : null) }}"
+                               value="{{ Input::old('outer_link', isset($data) ? $data->outer_link : null) }}"
                                placeholder="http://example.com/">
                     </div>
                     <div class="form-group">
@@ -94,10 +95,10 @@
                         </label>
                         <div class="input-group">
                             <input type="radio" name="is_top"
-                                   value="0" {{ ((isset($oArticle) ? $oArticle->is_top : 0) === 0) ? 'checked' : '' }}>
+                                   value="0" {{ ((isset($data) ? $data->is_top : 0) === 0) ? 'checked' : '' }}>
                             <label class="choice" for="radiogroup">否</label>
                             <input type="radio" name="is_top"
-                                   value="1" {{ ((isset($oArticle) ? $oArticle->is_top : 0) === 1) ? 'checked' : '' }}>
+                                   value="1" {{ ((isset($data) ? $data->is_top : 0) === 1) ? 'checked' : '' }}>
                             <label class="choice" for="radiogroup">是</label>
                         </div>
                     </div>

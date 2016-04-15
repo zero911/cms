@@ -12,6 +12,7 @@ namespace App\Models;
 class Flags extends BaseModel
 {
     protected $table='yascmf_flags';
+    public static $resourceName='flag';
 
     /**
      *  [获取所有标记对象]

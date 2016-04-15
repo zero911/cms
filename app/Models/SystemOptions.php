@@ -16,5 +16,5 @@ class SystemOptions extends BaseModel
     protected $fillable=[
         'id','name','value'
     ];
-
+    public static $resourceName='system_option';
 }

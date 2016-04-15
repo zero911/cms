@@ -22,7 +22,7 @@ class SystemLogger extends BaseModel
         'operator_ip',
         'created_at'
     ];
-
+    public static $resourceName='system_logger';
     /**
      * 定义相对关联
      */

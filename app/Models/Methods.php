@@ -25,7 +25,7 @@ class Methods extends BaseModel
         'is_actived' => 'boolean',
         'method_code' => 'alpha_dash',
     ];
-
+    public static $resourceName='method';
     /**[获取所有顶级模块]
      * @return mixed
      */

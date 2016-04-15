@@ -31,17 +31,17 @@
                         <input type="text" class="form-control" name="display_name" autocomplete="off"
                                value="{{ Input::old('display_name') }}" placeholder="角色(用户组)展示名">
                     </div>
-                    <div class="form-group">
-                        <label>关联权限
-                            <small class="text-red">*</small>
-                        </label>
-                        <div class="input-group">
-                            @foreach($permissions as $per)
-                                <input type="checkbox" name="permissions[]" value="{{ $per->id }}">
-                                <label class="choice" for="permissions[]">{{ $per->display_name }}</label>
-                            @endforeach
-                        </div>
-                    </div>
+                    {{--<div class="form-group">--}}
+                        {{--<label>关联权限--}}
+                            {{--<small class="text-red">*</small>--}}
+                        {{--</label>--}}
+                        {{--<div class="input-group">--}}
+                            {{--@foreach($permissions as $per)--}}
+                                {{--<input type="checkbox" name="permissions[]" value="{{ $per->id }}">--}}
+                                {{--<label class="choice" for="permissions[]">{{ $per->display_name }}</label>--}}
+                            {{--@endforeach--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                 </div><!-- /.tab-pane -->
 
                 <button type="submit" class="btn btn-primary">新增角色</button>

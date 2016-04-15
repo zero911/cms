@@ -16,8 +16,11 @@ namespace App\Models;
 class Metas extends BaseModel
 {
     protected $table='yascmf_metas';
-
-
+    protected $fillable=[
+        'name','thumb','type','slug','description','count','sort',
+    ];
+    public $timestamps=false;
+    public static $resourceName='meta';
     public static $rules=[
         'name'=>'required|between:2,10',
         'description'=>'required|between:2,20',
@@ -40,28 +43,5 @@ class Metas extends BaseModel
         $_objct->count=$_objct->count+1;
         $_objct->save();
         exit;
-    }
-
-    /** [组建创建和更新meta数据]
-     * @param $oMenta object
-     * @param $aInputs array
-     * @param string $type string
-     * @return mixed  object
-     */
-    public function compileData($oMenta,$aInputs,$type='category'){
-
-        if($type=='category'){
-            $oMenta->slug=e($aInputs['slug']);
-            $oMenta->name=e($aInputs['name']);
-            $oMenta->description=e($aInputs['description']);
-        }
-        if(array_key_exists('thumb',$aInputs)){
-            $oMenta->thumb=$aInputs['thumb'];
-        }
-        if(array_key_exists('sort',$aInputs)){
-            $oMenta->sort=$aInputs['sort'];
-        }
-        $oMenta->type=$type;
-        return $oMenta;
     }
 }

@@ -7,11 +7,13 @@
  */
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\SystemLogger;
 use Route;
 use Session;
-
+use DB;
 
 class AdminBaseController extends Controller
 {
@@ -23,7 +25,7 @@ class AdminBaseController extends Controller
     protected $action;//当前action
     protected $bExtraSearch = false;//页面是否支持符合查询
     protected $viewVars = [];// 分配到页面的数据数组
-    protected $controller;
+    protected $controller;//当前控制器
     protected $resourceName = '';
     protected $bCustomCondition = false;//页面前提条件是否开启
     protected $aCustomConditionArray = [];//页面前提条件数组,支持多个条件组合
@@ -33,7 +35,11 @@ class AdminBaseController extends Controller
     protected $customPath = '';//模板文件路径
     protected $view = '';//最终整个模板的全路径  path.view
     protected $bIsCached = false;
-    protected $defaultRights=['admin.home','auth.login','auth.logout','console.cache'];//默认拥有权限，默认将首页\登录页\清空缓存写入权限中
+    protected $defaultRights = ['admin.home', 'auth.login', 'auth.logout', 'console.cache'];//默认拥有权限，默认将首页\登录页\清空缓存写入权限中
+    //定义用于页面组装数据的数组，用户edit/create
+    protected $params = [];
+    //定义语言包
+    protected $langVars = [];
 
     /**
      * 构造器
@@ -47,6 +53,7 @@ class AdminBaseController extends Controller
         $this->initModel();
         $this->initMenus();
         $this->checkRights() or abort(403);
+        $this->params = $this->request->except('_token');
     }
 
     /**初始化controller和action
@@ -70,8 +77,10 @@ class AdminBaseController extends Controller
     protected function initModel()
     {
         if ($sModelName = $this->modelName) {
+            $this->resourceName = __('_model.' . $sModelName::$resourceName);
             //modelName存在则实例化model
             $this->model = app()->make($sModelName);
+            $this->langVars = ['resource' => __('_model.' . Str::slug($sModelName::$resourceName))];
         }
     }
 
@@ -179,14 +188,139 @@ class AdminBaseController extends Controller
         return $this->render();
     }
 
+    /**
+     * 保存数据
+     * @param $id int [默认空处理创建逻辑，非空处理edit逻辑]
+     * @return array
+     */
+    protected function saveData($id = null)
+    {
+//        pr($this->params);
+        //遍历表单数据避免出现多维数组
+        $_params=trimArray($this->params);
+        foreach($_params as $key=> $par){
+            if(is_array($par)){
+                $_params[$key]=implode(',',$par);
+            }else{
+                $_params[$key]=e($par);
+            }
+        }
+//        pr($_params);
+        //数据填充
+        $sModel = $id ? $this->model->find($id)->fill($_params) : $this->model->fill($_params);
+        $aRules = $this->makeValidateRules($sModel);
+//        pr($sModel->toArray());exit;
+        $bSucc = $sModel->save($aRules);
+        return ['is_success'=>$bSucc, 'model'=>$sModel];
+    }
+
+    /** [构造表单验证条件]
+     * @param $oModel
+     * @return mixed
+     */
+    protected function makeValidateRules($oModel)
+    {
+        $sClassName = get_class($oModel);
+        return $sClassName::$rules;
+    }
+
+    /**
+     * [封装的create函数]
+     * @return \Illuminate\Http\RedirectResponse|mixed
+     */
+    public function create()
+    {
+        if ($this->request->isMethod('post')) {
+            DB::connection()->beginTransaction();
+            $aResult = $this->saveData();
+            if ($aResult['is_success']) {
+                DB::connection()->commit();
+                SystemLogger::writeLog(Session::get('admin_user_id'), $this->request->url(),
+                    $this->request->getClientIp(), $this->controller . '@' . $this->action, '创建' . $this->langVars['resource'] . ':' . $aResult['model']->id);
+                return $this->goBackToIndex('succss', __('_basic.created', $this->langVars));
+            } else {
+                DB::connection()->rollback();
+                return $this->goBack('error', __('_basic.create-failed', $this->langVars));
+            }
+        }
+        return $this->render();
+    }
+
+    /** [封装update方法]
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|mixed
+     */
+    public function edit($id)
+    {
+        if (!$id) {
+            return $this->goBackToIndex('error',__('_basic.param-error', $this->langVars));
+        }
+        $_model = $this->model->find($id);
+        if (!is_object($_model)) {
+            return $this->goBackToIndex('error', __('_basic.model-exist'));
+        }
+        if ($this->request->isMethod('post')) {
+            DB::connection()->beginTransaction();
+            $aResult = $this->saveData($id);
+            if ($aResult['is_success']) {
+                DB::connection()->commit();
+                SystemLogger::writeLog(Session::get('admin_user_id'), $this->request->url(),
+                    $this->request->getClientIp(), $this->controller . '@' . $this->action, '编辑' . $this->langVars['resource'] . ':' . $id);
+                return $this->goBackToIndex('success', __('_basic.updated', $this->langVars));
+            } else {
+                DB::connection()->rollback();
+                return $this->goBack('error', __('_basic.update-failed', $this->langVars));
+            }
+        }
+        $this->setVars('data', $_model);
+        return $this->render();
+    }
+
     /** [根据主键删除模型,支持单个,多个字符串或数组传入删除]
      * @param $ids
      * @return mixed
      */
-    public function delete($ids)
+    public function destroy($ids = null)
     {
+        if (!$ids && !isset($this->params['id'])) {
+            return $this->goBackToIndex('error', __('_basic.param-error', $this->langVars));
+        }
+        $ids or $ids = $this->params['id'];
+        $ids = explode(',', $ids);
+        $bSucc = false;
+        DB::connection()->beginTransaction();
+        foreach ($ids as $id) {
+            $sModel = $this->model->find($id);
+            if (!is_object($sModel)) break;
+            if (!$bSucc = $sModel->delete()) break;
+        }
+        $bSucc ? DB::connection()->commit() : DB::connection()->rollback();
+        $sLangKey = '_basic.' . ($bSucc ? 'deleted.' : 'delete-failed.');
+        $sType = $bSucc ? 'success' : 'error';
+        if($bSucc){
+            SystemLogger::writeLog(Session::get('admin_user_id'), $this->request->url(),
+                $this->request->getClientIp(), $this->controller . '@' . $this->action, '删除' . $this->langVars['resource'] . ':' . json_encode($ids));
+        }
+        return $this->goBackToIndex($sType, $sLangKey);
+    }
+
+    /** [浏览单条记录详细]
+     * @param $id int
+     * @return \Illuminate\Http\RedirectResponse|mixed
+     */
+    public function view($id)
+    {
+        if (!$id) {
+            return $this->goBackToIndex('error', __('_basic.visit-error'));
+        }
         $sModel = $this->model;
-        return $sModel::destroy($ids);
+        $_model = $sModel::find($id);
+        if (!is_object($_model)) {
+            return $this->goBackToIndex('error', __('_basic.model-exist'));
+        }
+//        pr($oArticle);exit;
+        $this->setVars('data', $_model);
+        return $this->render();
     }
 
     /**页面搜索条件同一处理方法
@@ -243,8 +377,8 @@ class AdminBaseController extends Controller
             $aResult[] = $method['url'];
             if (isset($method['kids']) && $method['kids']) {
                 foreach ($method['kids'] as $item) {
-                    $aUrl=explode(',',$item['url']);
-                    foreach($aUrl as $url){
+                    $aUrl = explode(',', $item['url']);
+                    foreach ($aUrl as $url) {
                         $aResult[] = $url;
                     }
                 }

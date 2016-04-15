@@ -151,21 +151,6 @@ class MethodController extends AdminBaseController
         return $this->render();
     }
 
-    /** [删除]
-     * @param null $ids
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy($ids)
-    {
-        $bSucc = $this->delete($ids);
-        if($bSucc){
-            SystemLogger::writeLog(Session::get('admin_user_id'),$this->request->url(),
-                $this->request->getClientIp(),$this->controller.'@'.$this->action,'删除删除模块:'.$ids);
-            return $this->goBackToIndex('success', __('_system.method-destroy-success'));
-        }
-        return $this->goBack('error', __('_system.method-destroy-error'));
-    }
-
     public function setPermissionByRole($role_id)
     {
         if (!$role_id) {

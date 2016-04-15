@@ -13,6 +13,11 @@ class Permission extends BaseModel
 {
 
     protected $table = 'yascmf_permissions';
+    public static $resourceName='permission';
+
+    protected $fillable=[
+      'name','display_name','description','type',
+    ];
 
     const PERMISSION_MENU_TYPE = 1;//菜单权限
     const PERMISSION_PAGE_TYPE = 2;//页面行级权限,比如页面crud
@@ -44,19 +49,6 @@ class Permission extends BaseModel
     {
         return static::whereIn('id', $sPermissionIds)->get();
     }
-
-    public function saveContent($oModel, $aInputs, $is_create = true)
-    {
-        if ($is_create && static::where('name', '=', $aInputs['name'])->first()) return null;
-
-        $oModel->display_name = e($aInputs['display_name']);
-        $oModel->type = e($aInputs['type']);
-        !array_key_exists('name', $aInputs) or $oModel->name = e($aInputs['name']);
-        !array_key_exists('description', $aInputs) or $oModel->description = e($aInputs['description']);
-
-        return $oModel;
-    }
-
     /** [按类别获取权限]
      * @param int $type
      * @return mixed

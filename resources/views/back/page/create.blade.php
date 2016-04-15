@@ -5,6 +5,8 @@
     <h2 class="page-header">{{__('_basic.page-create')}}</h2>
     <form method="post" accept-charset="utf-8">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="type" value="page">
+        <input type="hidden" name="category_id" value="0">
         <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">

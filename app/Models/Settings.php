@@ -13,7 +13,7 @@ class Settings extends BaseModel
 {
     protected $table = 'yascmf_settings';
     public $timestamps = false;
-
+    public static $resourceName='setting';
     public static $rules = [
         'name' => 'required|alpha_dash|between:2,32',
         'value' => 'required|min:5',
